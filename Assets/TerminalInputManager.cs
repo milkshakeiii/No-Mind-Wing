@@ -30,6 +30,28 @@ public class TerminalInputManager : MonoBehaviour
 
     private void ProcessInput(string input)
     {
-        //do all the things
+        string[] inputWords = input.Split(' ');
+        string command = inputWords[0];
+        if (command.Equals("load"))
+        {
+            LoadCustomSprite(inputWords[1]);
+        }
+        if (command.Equals("dummy"))
+        {
+            Vessel.BuildVessel(inputWords[1], 1f, 1f, "king");
+        }
+    }
+
+    private void LoadCustomSprite(string path)
+    {
+        string fileName = System.IO.Path.GetFileName(path);
+        string destinationFolder = System.IO.Path.Combine(Application.persistentDataPath, "Sprites");
+        string destinationFilePath = System.IO.Path.Combine(destinationFolder, fileName);
+        if (System.IO.File.Exists(destinationFilePath))
+            System.IO.File.Delete(destinationFilePath);
+        if (!System.IO.Directory.Exists(destinationFolder))
+            System.IO.Directory.CreateDirectory(destinationFolder);
+        System.IO.File.Copy(path, destinationFilePath);
+        SpriteManager.Instance().LoadCustomSprites();
     }
 }
