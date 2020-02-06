@@ -17,6 +17,24 @@ public class PlayerManager : MonoBehaviour
     void Start()
     {
         instance = this;
+        StartCoroutine(Blink());
+    }
+
+    private IEnumerator Blink()
+    {
+        while (true)
+        {
+            foreach (Vessel vessel in selection)
+            {
+                vessel.gameObject.GetComponent<SpriteRenderer>().color = Color.green;
+            }
+            yield return new WaitForSeconds(0.3f);
+            foreach (Vessel vessel in selection)
+            {
+                vessel.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
+            }
+            yield return new WaitForSeconds(1.7f);
+        }
     }
 
     // Update is called once per frame

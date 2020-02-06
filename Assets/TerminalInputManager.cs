@@ -39,7 +39,26 @@ public class TerminalInputManager : MonoBehaviour
         }
         if (command.Equals("dummy"))
         {
-            response = Vessel.BuildVessel(inputWords[1], 1f, 1f, "king");
+            List<VesselPart> parts = new List<VesselPart>();
+            for (int i = 0; i < inputWords.Length; i++)
+            {
+                string word = inputWords[i];
+                if (word.Equals("-bay"))
+                {
+                    float newQuality = float.Parse(inputWords[i + 1]);
+                    float xPos = float.Parse(inputWords[i + 2]);
+                    float yPos = float.Parse(inputWords[i + 3]);
+
+                    VesselPart newPart = new VesselPart()
+                    {
+                        partType = VesselPartType.Bay,
+                        quality = newQuality,
+                        position = new Vector2(xPos, yPos)
+                    };
+                    parts.Add(newPart);
+                }
+            }
+            response = Vessel.BuildVessel(inputWords[1], 1f, 1f, "king", parts);
         }
         if (command.Equals("select") || command.Equals("s"))
         {
