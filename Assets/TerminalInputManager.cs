@@ -32,18 +32,29 @@ public class TerminalInputManager : MonoBehaviour
     {
         string[] inputWords = input.Split(' ');
         string command = inputWords[0];
-        if (command.Equals("load"))
+        string response = "";
+        if (command.Equals("load-hull"))
         {
-            LoadCustomSprite(inputWords[1]);
+            response = LoadCustomSprite(inputWords[1]);
         }
         if (command.Equals("dummy"))
         {
-            Vessel.BuildVessel(inputWords[1], 1f, 1f, "king");
+            response = Vessel.BuildVessel(inputWords[1], 1f, 1f, "king");
         }
+        if (command.Equals("select") || command.Equals("s"))
+        {
+            List<string> designations = new List<string>(inputWords);
+            designations.RemoveAt(0);
+            PlayerManager.Instance().Select(designations);
+            response = "Selected unique designations: " + designations.Count;
+        }
+        terminalLinesMaker.PushLine(response);
     }
 
-    private void LoadCustomSprite(string path)
+    private string LoadCustomSprite(string path)
     {
+        if (!System.IO.File.Exists(path))
+            return "File " + path + " not found.";
         string fileName = System.IO.Path.GetFileName(path);
         string destinationFolder = System.IO.Path.Combine(Application.persistentDataPath, "Sprites");
         string destinationFilePath = System.IO.Path.Combine(destinationFolder, fileName);
@@ -52,6 +63,7 @@ public class TerminalInputManager : MonoBehaviour
         if (!System.IO.Directory.Exists(destinationFolder))
             System.IO.Directory.CreateDirectory(destinationFolder);
         System.IO.File.Copy(path, destinationFilePath);
-        SpriteManager.Instance().LoadCustomSprites();
+        SpriteManager.Instance().LoadSprites();
+        return "Hull loaded. Name: " + fileName;
     }
 }

@@ -17,8 +17,21 @@ public class Vessel : MonoBehaviour
     private float hitpoints = 1;
     private float maxHitpoints = 1;
 
-    public static void BuildVessel(string spriteName, float newSize, float newDurability, string newDesignation)
+    public static List<Vessel> GetVesselsByDesignation(List<string> designations)
     {
+        List<Vessel> vessels = new List<Vessel>();
+        foreach (string designation in designations)
+        {
+            vessels.AddRange(vesselDict[designation]);
+        }
+        return vessels;
+    }
+
+    public static string BuildVessel(string spriteName, float newSize, float newDurability, string newDesignation)
+    {
+        if (!SpriteManager.Instance().SpriteNameIsGood(spriteName))
+            return "No sprite was found with name: " + spriteName;
+
         GameObject newVessel = new GameObject(newDesignation);
 
         SpriteRenderer newSpriteRenderer = newVessel.AddComponent<SpriteRenderer>();
@@ -28,6 +41,9 @@ public class Vessel : MonoBehaviour
         Rigidbody2D newRigidbody = newVessel.AddComponent<UnityEngine.Rigidbody2D>();
         newRigidbody.gravityScale = 0;
 
+        //Collider2D newCollider = 
+        newVessel.AddComponent<PolygonCollider2D>();
+
         Vessel newVesselScript = newVessel.AddComponent<Vessel>();
         newVesselScript.Initiate(newVesselType, newSize, newDurability, newDesignation);
 
@@ -36,6 +52,7 @@ public class Vessel : MonoBehaviour
             vesselDict[newDesignation] = new List<Vessel>();
         }
         vesselDict[newDesignation].Add(newVesselScript);
+        return "Built vessel, designation: " + newDesignation;
     }
 
     public void Initiate(VesselType newVesselType, float newSize, float newDurability, string newDesignation)

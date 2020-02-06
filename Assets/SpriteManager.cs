@@ -24,9 +24,11 @@ public class SpriteManager : MonoBehaviour
     void Start()
     {
         instance = this;
+
+        LoadSprites();
     }
 
-    public void LoadCustomSprites()
+    public void LoadSprites()
     {
         string customSpritesPath = System.IO.Path.Combine(Application.persistentDataPath, "Sprites");
         if (!System.IO.Directory.Exists(customSpritesPath))
@@ -81,6 +83,11 @@ public class SpriteManager : MonoBehaviour
             vesselType = VesselType.Square
         };
         vesselSprites[fileName] = newVesselSprite;
+    }
+
+    public bool SpriteNameIsGood(string name)
+    {
+        return vesselSprites.ContainsKey(name);
     }
 
     public Sprite SpriteFromName(string name)
