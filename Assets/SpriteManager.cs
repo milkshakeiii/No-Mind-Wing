@@ -20,8 +20,8 @@ public class SpriteManager : MonoBehaviour
         return instance;
     }
 
-    // Start is called before the first frame update
-    void Start()
+    // Awake is called before Start
+    void Awake()
     {
         instance = this;
 

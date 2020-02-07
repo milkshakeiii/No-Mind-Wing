@@ -58,7 +58,7 @@ public class TerminalInputManager : MonoBehaviour
                     parts.Add(newPart);
                 }
             }
-            response = Vessel.BuildVessel(inputWords[1], 1f, 1f, "king", parts);
+            response = VesselManager.Instance().BuildVessel(inputWords[1], 1f, 1f, "king", parts);
         }
         if (command.Equals("select") || command.Equals("s"))
         {

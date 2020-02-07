@@ -50,11 +50,11 @@ public class PlayerManager : MonoBehaviour
 
     public void Select(List<string> designations)
     {
-        selection = Vessel.GetVesselsByDesignation(designations);
+        selection = VesselManager.Instance().GetVesselsByDesignation(designations);
     }
 
     public void AddToSelection(List<string> designations)
     {
-        selection.AddRange(Vessel.GetVesselsByDesignation(designations));
+        selection.AddRange(VesselManager.Instance().GetVesselsByDesignation(designations));
     }
 }
