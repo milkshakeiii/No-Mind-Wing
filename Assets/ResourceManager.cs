@@ -5,7 +5,7 @@ using UnityEngine;
 public enum ResourceType
 {
     Build = 1,
-    Fuel = 2,
+    Move = 2,
     Launch = 3
 }
 
@@ -40,7 +40,7 @@ public class ResourceManager : MonoBehaviour
             if (i < buildPatches)
                 resourceType = ResourceType.Build;
             else if (i < buildPatches + fuelPatches)
-                resourceType = ResourceType.Fuel;
+                resourceType = ResourceType.Move;
             else
                 resourceType = ResourceType.Launch;
             Vector2 position = new Vector2(Random.Range(-width/2, width/2), Random.Range(0, -height));
@@ -62,19 +62,22 @@ public class ResourceManager : MonoBehaviour
         newSpriteRenderer.sprite = SpriteManager.Instance().SpriteFromName("square");
 
         //Collider2D newCollider = 
-        newResource.AddComponent<BoxCollider2D>();
+        newResource.AddComponent<BoxCollider2D>().isTrigger = true;
 
         if (resourceType == ResourceType.Build)
         {
             newSpriteRenderer.color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+            newResource.tag = "Build";
         }
-        if (resourceType == ResourceType.Fuel)
+        if (resourceType == ResourceType.Move)
         {
             newSpriteRenderer.color = new Color(0, 1, 0, 0.5f);
+            newResource.tag = "Move";
         }
         if (resourceType == ResourceType.Launch)
         {
             newSpriteRenderer.color = new Color(1f, 0.647f, 0, 0.5f);
+            newResource.tag = "Launch";
         }
         
     }

@@ -8,6 +8,26 @@ public class PlayerManager : MonoBehaviour
 
     private List<Vessel> selection = new List<Vessel>();
 
+    private Dictionary<ResourceType, float> stockpiles = new Dictionary<ResourceType, float>();
+
+    public bool AddResource(float amount, ResourceType resource)
+    {
+        float stockpile = 0;
+        stockpiles.TryGetValue(resource, out stockpile);
+        if (stockpile + amount < 0)
+            return false;
+        stockpile += amount;
+        stockpiles[resource] = amount;
+        return true;
+    }
+
+    public float GetResourceStockpile(ResourceType resource)
+    {
+        float stockpile = 0;
+        stockpiles.TryGetValue(resource, out stockpile);
+        return stockpile;
+    }
+
     public static PlayerManager Instance()
     {
         return instance;

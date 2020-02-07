@@ -45,15 +45,19 @@ public class TerminalInputManager : MonoBehaviour
                 string word = inputWords[i];
                 if (word.Equals("-bay"))
                 {
-                    float newQuality = float.Parse(inputWords[i + 1]);
-                    float xPos = float.Parse(inputWords[i + 2]);
-                    float yPos = float.Parse(inputWords[i + 3]);
+                    float newSize = float.Parse(inputWords[i + 1]);
+                    float newQuality1 = float.Parse(inputWords[i + 2]);
+                    float newQuality2 = float.Parse(inputWords[i + 3]);
+                    float xPos = float.Parse(inputWords[i + 4]);
+                    float yPos = float.Parse(inputWords[i + 5]);
 
                     VesselPart newPart = new VesselPart()
                     {
                         partType = VesselPartType.Bay,
-                        quality = newQuality,
-                        position = new Vector2(xPos, yPos)
+                        position = new Vector2(xPos, yPos),
+                        size = newSize,
+                        quality1 = newQuality1,
+                        quality2 = newQuality2
                     };
                     parts.Add(newPart);
                 }

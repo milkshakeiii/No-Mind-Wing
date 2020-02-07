@@ -19,6 +19,11 @@ public class Vessel : MonoBehaviour
             if (part.partType == VesselPartType.Bay)
             {
                 newSpriteRenderer.sprite = SpriteManager.Instance().SpriteFromName("square");
+                newPart.AddComponent<Bay>().Initiate(part.size, part.quality1, part.quality2);
+                newPart.AddComponent<BoxCollider2D>();
+                Rigidbody2D newRigidbody = newPart.AddComponent<UnityEngine.Rigidbody2D>();
+                newRigidbody.gravityScale = 0;
+                newPart.layer = 8; //Resource
             }
             else if (part.partType == VesselPartType.Engine)
             {
@@ -34,7 +39,15 @@ public class Vessel : MonoBehaviour
             SpriteRenderer vesselSprite = gameObject.GetComponent<SpriteRenderer>();
             newPart.transform.localPosition = new Vector3(part.position.x * vesselSprite.size.x * 0.5f, part.position.y * vesselSprite.size.y * 0.5f, -1);
             newPart.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-            newPart.GetComponent<SpriteRenderer>().color = new Color(part.quality, part.quality, part.quality);
+            if (part.partType == VesselPartType.Engine)
+            {
+                newPart.GetComponent<SpriteRenderer>().color = new Color(part.quality1, part.quality1, part.quality1);
+            }
+            else
+            {
+                float quality = (part.quality1 + part.quality2) / 2;
+                newPart.GetComponent<SpriteRenderer>().color = new Color(quality, quality, quality);
+            }
 
             vesselParts.Add(part);
         }
