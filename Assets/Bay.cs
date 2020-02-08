@@ -9,7 +9,7 @@ public class Bay : MonoBehaviour
     private float gatheringMax;
 
     private float gatheringRate = 0f;
-    private const float gatheringWarmupFactor = .1f;
+    private const float gatheringWarmupFactor = 0.1f;
     private const float gatheringMaxFactor = 1f;
 
     public void Initiate(float size, float quality1, float quality2)
