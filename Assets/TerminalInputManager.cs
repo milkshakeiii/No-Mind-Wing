@@ -37,7 +37,7 @@ public class TerminalInputManager : MonoBehaviour
         {
             response = LoadCustomSprite(inputWords[1]);
         }
-        if (command.Equals("dummy"))
+        if (command.Equals("dummy") || command.Equals("build"))
         {
             List<VesselPart> parts = new List<VesselPart>();
             for (int i = 0; i < inputWords.Length; i++)
@@ -72,7 +72,30 @@ public class TerminalInputManager : MonoBehaviour
                     parts.Add(newPart);
                 }
             }
-            response = VesselManager.Instance().BuildVessel(inputWords[1], 1f, 1f, "king", parts);
+            List<Vessel> sourceVessels;
+            string spriteName;
+            float size;
+            float durability;
+            string designation;
+            
+            bool dummy = (command.Equals("dummy")) ;
+            if (dummy)
+            {
+                sourceVessels = new List<Vessel>();
+                spriteName = inputWords[1];
+                size = 1f;
+                durability = 1f;
+                designation = "king";
+            }
+            else
+            {
+                sourceVessels = PlayerManager.Instance().GetSelection();
+                spriteName = inputWords[1];
+                size = float.Parse(inputWords[2]);
+                durability = float.Parse(inputWords[3]);
+                designation = inputWords[4];
+            }
+            response = VesselManager.Instance().BuildVessel(!dummy, sourceVessels, spriteName, size, durability, designation, parts);
         }
         if (command.Equals("select") || command.Equals("s"))
         {
@@ -80,6 +103,22 @@ public class TerminalInputManager : MonoBehaviour
             designations.RemoveAt(0);
             PlayerManager.Instance().Select(designations);
             response = "Selected unique designations: " + designations.Count;
+        }
+        if (command.Equals("ignite") || command.Equals("quench"))
+        {
+            bool on = command.Equals("ignite");
+            int[] indexes = new int[inputWords.Length - 1];
+            for (int i = 1; i < inputWords.Length; i++)
+            {
+                indexes[i - 1] = int.Parse(inputWords[i]);
+            }
+            foreach (Vessel selection in PlayerManager.Instance().GetSelection())
+            {
+                if (on)
+                    selection.IgniteEngines(indexes);
+                else
+                    selection.QuenchEngines(indexes);
+            }
         }
         terminalLinesMaker.PushLine(response);
     }

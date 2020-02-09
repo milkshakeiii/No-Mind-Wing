@@ -6,6 +6,10 @@ public class PlayerManager : MonoBehaviour
 {
     static PlayerManager instance;
 
+    public TMPro.TextMeshProUGUI buildStockpileText;
+    public TMPro.TextMeshProUGUI moveStockpileText;
+    public TMPro.TextMeshProUGUI launchStockpileText;
+
     private List<Vessel> selection = new List<Vessel>();
 
     private Dictionary<ResourceType, float> stockpiles = new Dictionary<ResourceType, float>();
@@ -17,7 +21,7 @@ public class PlayerManager : MonoBehaviour
         if (stockpile + amount < 0)
             return false;
         stockpile += amount;
-        stockpiles[resource] = amount;
+        stockpiles[resource] = stockpile;
         return true;
     }
 
@@ -60,7 +64,9 @@ public class PlayerManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        buildStockpileText.text = "<color=#FFFFFF>" + GetResourceStockpile(ResourceType.Build) + "</color>";
+        moveStockpileText.text = "<color=#10FF10>" + GetResourceStockpile(ResourceType.Move) + "</color>";
+        launchStockpileText.text = "<color=#FF7F00>" + GetResourceStockpile(ResourceType.Launch) + "</color>";
     }
 
     public List<Vessel> GetSelection()

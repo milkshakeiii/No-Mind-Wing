@@ -16,7 +16,6 @@ public class Bay : MonoBehaviour
     {
         gatheringWarmup = quality1;
         gatheringMax = quality2;
-        gameObject.transform.localScale = new Vector3(size, size, size);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

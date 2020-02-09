@@ -25,7 +25,6 @@ public class Engine : MonoBehaviour
     {
         thrustWarmup = quality1;
         maxSpeed = quality2;
-        gameObject.transform.localScale = new Vector3(size, size, size);
         targetRigidbody = gameObject.transform.parent.gameObject.GetComponent<Rigidbody2D>();
     }
 
@@ -52,13 +51,21 @@ public class Engine : MonoBehaviour
         {
             currentThrust = Mathf.Min(currentThrust + thrustWarmup * thrustWarmupFactor * Time.deltaTime,
                                       GetMaxThrust());
-            Vector2 force = currentThrust * gameObject.transform.forward;
+            Vector2 force = currentThrust * gameObject.transform.up;
 
-            if (targetRigidbody.angularVelocity < absoluteMaxAngularVelocity &&
+            if (Mathf.Abs(targetRigidbody.angularVelocity) < absoluteMaxAngularVelocity &&
                 targetRigidbody.velocity.sqrMagnitude < maxSpeed*maxSpeed*maxSpeedFactor*maxSpeedFactor)
             {
+//                Debug.Log(currentThrust);
                 targetRigidbody.AddForceAtPosition(force, gameObject.transform.position);
             }
+//            else
+//            {
+//                if (!(Mathf.Abs(targetRigidbody.angularVelocity) < absoluteMaxAngularVelocity))
+//                    Debug.Log("angular velocity exceeded");
+//                if (!(targetRigidbody.velocity.sqrMagnitude < maxSpeed * maxSpeed * maxSpeedFactor * maxSpeedFactor))
+//                    Debug.Log("max speed exceeded");
+//            }
         }
         else
         {
