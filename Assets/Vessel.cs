@@ -28,6 +28,7 @@ public class Vessel : MonoBehaviour
             else if (part.partType == VesselPartType.Engine)
             {
                 newSpriteRenderer.sprite = SpriteManager.Instance().SpriteFromName("circle");
+                newPart.AddComponent<Bay>().Initiate(part.size, part.quality1, part.quality2);
             }
             else if (part.partType == VesselPartType.Launcher)
             {
@@ -39,15 +40,9 @@ public class Vessel : MonoBehaviour
             SpriteRenderer vesselSprite = gameObject.GetComponent<SpriteRenderer>();
             newPart.transform.localPosition = new Vector3(part.position.x * vesselSprite.size.x * 0.5f, part.position.y * vesselSprite.size.y * 0.5f, -1);
             newPart.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-            if (part.partType == VesselPartType.Engine)
-            {
-                newPart.GetComponent<SpriteRenderer>().color = new Color(part.quality1, part.quality1, part.quality1);
-            }
-            else
-            {
-                float quality = (part.quality1 + part.quality2) / 2;
-                newPart.GetComponent<SpriteRenderer>().color = new Color(quality, quality, quality);
-            }
+            newPart.transform.localEulerAngles = new Vector3(0, 0, part.facing);
+            float quality = (part.quality1 + part.quality2) / 2;
+            newPart.GetComponent<SpriteRenderer>().color = new Color(quality, quality, quality);
 
             vesselParts.Add(part);
         }

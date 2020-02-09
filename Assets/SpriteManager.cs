@@ -40,6 +40,7 @@ public class SpriteManager : MonoBehaviour
         }
         LoadDefaultSprite("square");
         LoadDefaultSprite("circle");
+        LoadDefaultSprite("halfcircle");
         LoadDefaultSprite("triangle");
     }
 

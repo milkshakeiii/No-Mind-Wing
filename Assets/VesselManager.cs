@@ -20,9 +20,10 @@ public struct VesselPart
 {
     public VesselPartType partType;
     public Vector2 position;
+    public float facing; //in degrees
     public float size; // maximum vessel size, thrust maximum, projectile size
     public float quality1; // gathering warmup, thrust warmup, projectile velocity
-    public float quality2; // gathering maximum, nothing, range
+    public float quality2; // gathering maximum, speed maximum, range
 }
 public class VesselManager : MonoBehaviour
 {
