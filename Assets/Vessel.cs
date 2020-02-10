@@ -10,7 +10,7 @@ public class Vessel : MonoBehaviour
     private List<VesselPart> vesselParts = new List<VesselPart>();
     private List<Engine> engines = new List<Engine>();
     private List<Bay> bays = new List<Bay>();
-    //private List<Launcher> launchers = new List<Launcher>();
+    private List<Launcher> launchers = new List<Launcher>();
 
     private const float sizeFactor = 0.2f;
 
@@ -65,6 +65,10 @@ public class Vessel : MonoBehaviour
             else if (part.partType == VesselPartType.Launcher)
             {
                 newSpriteRenderer.sprite = SpriteManager.Instance().SpriteFromName("triangle");
+                Launcher newLauncher = newPart.AddComponent<Launcher>();
+                newLauncher.Initiate(part.size, part.quality1, part.quality2);
+
+                launchers.Add(newLauncher);
             }
 
             vesselParts.Add(part);
@@ -93,6 +97,17 @@ public class Vessel : MonoBehaviour
             engines[index].TurnOff();
     }
 
+    public int Fire(int[] indexes)
+    {
+        int firedCount = 0;
+        foreach (int index in indexes)
+        {
+            if (ProjectileManager.Instance().Fire(launchers[index]))
+                firedCount++;
+        }
+        return firedCount;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -104,6 +119,4 @@ public class Vessel : MonoBehaviour
     {
         
     }
-
-
 }

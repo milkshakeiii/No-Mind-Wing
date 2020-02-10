@@ -70,7 +70,8 @@ public class TerminalInputManager : MonoBehaviour
                 string word = inputWords[i];
                 bool bay = word.Equals("-bay");
                 bool engine = word.Equals("-engine");
-                if (bay || engine)
+                bool launcher = word.Equals("-launcher");
+                if (bay || engine || launcher)
                 {
                     float newSize = float.Parse(inputWords[i + 1]);
                     float newQuality1 = float.Parse(inputWords[i + 2]);
@@ -82,8 +83,10 @@ public class TerminalInputManager : MonoBehaviour
                     VesselPartType newPartType;
                     if (bay)
                         newPartType = VesselPartType.Bay;
-                    else
+                    else if (engine)
                         newPartType = VesselPartType.Engine;
+                    else
+                        newPartType = VesselPartType.Launcher;
 
                     VesselPart newPart = new VesselPart()
                     {
@@ -145,6 +148,20 @@ public class TerminalInputManager : MonoBehaviour
                     selection.QuenchEngines(indexes);
             }
             response = command + ": " + indexes.Length + " engines.";
+        }
+        if (command.Equals("fire"))
+        {
+            int[] indexes = new int[inputWords.Length - 1];
+            int fireCount = 0;
+            for (int i = 1; i < inputWords.Length; i++)
+            {
+                indexes[i - 1] = int.Parse(inputWords[i]);
+            }
+            foreach (Vessel selection in PlayerManager.Instance().GetSelection())
+            {
+                fireCount = selection.Fire(indexes);
+            }
+            response = "Fired " + fireCount + " launchers.";
         }
         terminalLinesMaker.PushLine(response);
     }

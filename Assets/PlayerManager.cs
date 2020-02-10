@@ -42,6 +42,10 @@ public class PlayerManager : MonoBehaviour
     {
         instance = this;
         StartCoroutine(Blink());
+
+        stockpiles[ResourceType.Build] = 1f;
+        stockpiles[ResourceType.Launch] = 1f;
+        stockpiles[ResourceType.Move] = 1f;
     }
 
     private IEnumerator Blink()

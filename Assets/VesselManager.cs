@@ -108,7 +108,7 @@ public class VesselManager : MonoBehaviour
         }
         vesselDict[newDesignation].Add(newVesselScript);
 
-        if(!PlayerManager.Instance().AddResource(-cost, ResourceType.Build))
+        if(requireSource && !PlayerManager.Instance().AddResource(-cost, ResourceType.Build))
             return "Problem: I thought there were enough resources but AddResource returned false";
         return "Built vessel, designation: " + newDesignation;
     }
