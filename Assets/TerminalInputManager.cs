@@ -7,12 +7,35 @@ public class TerminalInputManager : MonoBehaviour
     public TMPro.TMP_InputField inputField;
     public MakeTerminalLines terminalLinesMaker;
 
+    private int upLine = -1;
+    private List<string> history = new List<string>();
+
     // Start is called before the first frame update
     void Start()
     {
         inputField.onSubmit.AddListener(OnInputEnter);
         inputField.onDeselect.AddListener(OnInputDeselect);
         inputField.ActivateInputField();
+    }
+
+    void Update()
+    {
+        bool up = Input.GetKeyDown(KeyCode.UpArrow);
+        if (up)
+        {
+            upLine += 1;
+            upLine = Mathf.Min(history.Count-1, upLine);
+        }
+        bool down = Input.GetKeyDown(KeyCode.DownArrow);
+        if (down)
+        {
+            upLine -= 1;
+            upLine = Mathf.Max(0, upLine);
+        }
+        if (up || down)
+        {
+            inputField.text = history[upLine];
+        }
     }
 
     private void OnInputDeselect(string text)
@@ -26,13 +49,15 @@ public class TerminalInputManager : MonoBehaviour
         inputField.text = "";
         inputField.ActivateInputField();
         ProcessInput(submitted);
+        upLine = 0; 
     }
 
     private void ProcessInput(string input)
     {
+        history.Insert(0, input);
         string[] inputWords = input.Split(' ');
         string command = inputWords[0];
-        string response = "";
+        string response = "Nothing to do";
         if (command.Equals("load-hull"))
         {
             response = LoadCustomSprite(inputWords[1]);
@@ -119,6 +144,7 @@ public class TerminalInputManager : MonoBehaviour
                 else
                     selection.QuenchEngines(indexes);
             }
+            response = command + ": " + indexes.Length + " engines.";
         }
         terminalLinesMaker.PushLine(response);
     }

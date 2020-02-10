@@ -108,12 +108,14 @@ public class VesselManager : MonoBehaviour
         }
         vesselDict[newDesignation].Add(newVesselScript);
 
+        if(!PlayerManager.Instance().AddResource(-cost, ResourceType.Build))
+            return "Problem: I thought there were enough resources but AddResource returned false";
         return "Built vessel, designation: " + newDesignation;
     }
 
     private float VesselCost(VesselType type, float size, float durability, List<VesselPart> parts)
     {
-        return 1f;
+        return 0.1f;
     }
 
     // Start is called before the first frame update
