@@ -37,6 +37,7 @@ public class ProjectileManager : MonoBehaviour
         projectile.transform.position = source.transform.position;
         projectile.GetComponent<Rigidbody2D>().velocity = source.transform.up * source.LaunchVelocity();
         launcherToProjectile[source] = projectile;
+        StartCoroutine(ExplodeTimer(projectile, source));
 
         return true;
     }
