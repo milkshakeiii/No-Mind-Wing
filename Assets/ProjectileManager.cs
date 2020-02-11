@@ -6,6 +6,7 @@ public class ProjectileManager : MonoBehaviour
 {
     private static ProjectileManager instance;
 
+    private Dictionary<GameObject, Launcher> projectileToLauncher = new Dictionary<GameObject, Launcher>();
     private Dictionary<Launcher, GameObject> launcherToProjectile = new Dictionary<Launcher, GameObject>();
 
     private Queue<GameObject> freeProjectiles = new Queue<GameObject>();
@@ -32,6 +33,7 @@ public class ProjectileManager : MonoBehaviour
             throw new UnityException("Fire attempt to fire without sufficient resources");
 
         GameObject projectile = GetFreeProjectile();
+        projectileToLauncher[projectile] = source;
         projectile.SetActive(true);
         projectile.transform.localScale = Vector3.one * source.ProjectileSize();
         projectile.transform.position = source.transform.position;
@@ -68,8 +70,14 @@ public class ProjectileManager : MonoBehaviour
             spriteRenderer.color = (coefficient) * Color.clear + (1 - coefficient) * new Color(1, 0.7f, 0);
             yield return null;
         }
+        ProjectileReady(projectile);
+    }
+
+    public void ProjectileReady(GameObject projectile)
+    {
         projectile.SetActive(false);
-        launcherToProjectile[source] = null;
+        launcherToProjectile[projectileToLauncher[projectile]] = null;
+        projectileToLauncher[projectile] = null;
         freeProjectiles.Enqueue(projectile);
     }
 
@@ -81,6 +89,7 @@ public class ProjectileManager : MonoBehaviour
         }
 
         GameObject newProjectile = new GameObject("projectile");
+        newProjectile.tag = "Projectile";
 
         SpriteRenderer newSpriteRenderer = newProjectile.AddComponent<SpriteRenderer>();
         newSpriteRenderer.sprite = SpriteManager.Instance().SpriteFromName("square");

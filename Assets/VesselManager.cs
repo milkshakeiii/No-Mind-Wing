@@ -46,7 +46,13 @@ public class VesselManager : MonoBehaviour
         return vessels;
     }
 
-    public string BuildVessel(bool requireSource, List<Vessel> sourceVessels, string spriteName, float newSize, float newDurability, string newDesignation, List<VesselPart> parts)
+    public string BuildVessel(bool requireSource,
+                              List<Vessel> sourceVessels,
+                              string spriteName,
+                              float newSize,
+                              float newDurability,
+                              string newDesignation,
+                              List<VesselPart> parts)
     {
         if (requireSource && sourceVessels.Count == 0)
         {
@@ -95,6 +101,7 @@ public class VesselManager : MonoBehaviour
 
         Rigidbody2D newRigidbody = newVessel.AddComponent<UnityEngine.Rigidbody2D>();
         newRigidbody.gravityScale = 0;
+        newRigidbody.useAutoMass = true;
 
         //Collider2D newCollider = 
         newVessel.AddComponent<PolygonCollider2D>();

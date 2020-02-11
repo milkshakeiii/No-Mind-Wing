@@ -12,7 +12,26 @@ public class Vessel : MonoBehaviour
     private List<Bay> bays = new List<Bay>();
     private List<Launcher> launchers = new List<Launcher>();
 
-    private const float sizeFactor = 0.2f;
+    private const float partSizeFactor = 0.2f;
+    private const float damageFactor = 1f;
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Projectile")
+        {
+            TakeDamage(other);
+            ProjectileManager.Instance().ProjectileReady(other.gameObject);
+        }
+    }
+
+    private void TakeDamage(Collider projectileCollider)
+    {
+        float damage = projectileCollider.transform.localScale.x *
+                       projectileCollider.attachedRigidbody.velocity.magnitude;
+        hitpoints -= damage;
+        Color color = gameObject.GetComponent<SpriteRenderer>().color;
+        gameObject.GetComponent<SpriteRenderer>().color = color * (hitpoints / maxHitpoints);
+    }
 
     public List<Bay> LargeEnoughBays(float neededSize)
     {
@@ -37,7 +56,7 @@ public class Vessel : MonoBehaviour
 
             SpriteRenderer vesselSprite = gameObject.GetComponent<SpriteRenderer>();
             newPart.transform.localPosition = new Vector3(part.position.x * vesselSprite.size.x * 0.5f, part.position.y * vesselSprite.size.y * 0.5f, -1);
-            newPart.transform.localScale = Vector3.one * part.size * sizeFactor;
+            newPart.transform.localScale = Vector3.one * part.size * partSizeFactor;
             newPart.transform.localEulerAngles = new Vector3(0, 0, part.facing);
             float quality = (part.quality1 + part.quality2) / 2;
             newPart.GetComponent<SpriteRenderer>().color = new Color(quality, quality, quality);
