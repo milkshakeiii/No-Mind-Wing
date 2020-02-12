@@ -7,6 +7,7 @@ TagManager:
   - Build
   - Move
   - Launch
+  - Projectile
   layers:
   - Default
   - TransparentFX

@@ -16,6 +16,13 @@ public class ProjectileManager : MonoBehaviour
         return instance;
     }
 
+    public Launcher GetLauncherOfProjectile(GameObject projectile)
+    {
+        if (projectile.tag != "Projectile")
+            throw new UnityException("Can't get launcher of something which isn't a projectile.");
+        return projectileToLauncher[projectile];
+    }
+
     public bool Fire(Launcher source)
     {
         float stockpile = PlayerManager.Instance().GetResourceStockpile(ResourceType.Launch);
@@ -70,15 +77,27 @@ public class ProjectileManager : MonoBehaviour
             spriteRenderer.color = (coefficient) * Color.clear + (1 - coefficient) * new Color(1, 0.7f, 0);
             yield return null;
         }
-        ProjectileReady(projectile);
+        ProjectileTimeout(projectile);
     }
 
-    public void ProjectileReady(GameObject projectile)
+    public void ProjectileTimeout(GameObject projectile)
     {
         projectile.SetActive(false);
         launcherToProjectile[projectileToLauncher[projectile]] = null;
         projectileToLauncher[projectile] = null;
         freeProjectiles.Enqueue(projectile);
+    }
+
+    public void Explode(GameObject projectile)
+    {
+        if (projectile != null)
+            projectile.SetActive(false);
+    }
+
+    public void Explode(Launcher launcher)
+    {
+        if (launcherToProjectile.ContainsKey(launcher))
+            Explode(launcherToProjectile[launcher]);
     }
 
     private GameObject GetFreeProjectile()

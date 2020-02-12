@@ -15,22 +15,28 @@ public class Vessel : MonoBehaviour
     private const float partSizeFactor = 0.2f;
     private const float damageFactor = 1f;
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Projectile")
+        if (other.tag == "Projectile" && 
+            !(launchers.Contains(ProjectileManager.Instance().GetLauncherOfProjectile(other.gameObject))))
         {
             TakeDamage(other);
-            ProjectileManager.Instance().ProjectileReady(other.gameObject);
+            ProjectileManager.Instance().Explode(other.gameObject);
         }
     }
 
-    private void TakeDamage(Collider projectileCollider)
+    private void TakeDamage(Collider2D projectileCollider)
     {
         float damage = projectileCollider.transform.localScale.x *
                        projectileCollider.attachedRigidbody.velocity.magnitude;
         hitpoints -= damage;
         Color color = gameObject.GetComponent<SpriteRenderer>().color;
-        gameObject.GetComponent<SpriteRenderer>().color = color * (hitpoints / maxHitpoints);
+        Color newColor = color * (hitpoints / maxHitpoints);
+        gameObject.GetComponent<SpriteRenderer>().color = new Color(newColor.r, newColor.g, newColor.b, 1);
+        if (hitpoints < 0)
+        {
+            Destroy(gameObject);
+        }
     }
 
     public List<Bay> LargeEnoughBays(float neededSize)
@@ -137,5 +143,15 @@ public class Vessel : MonoBehaviour
     void Update()
     {
         
+    }
+
+    private void OnDestroy()
+    {
+        foreach (Launcher launcher in launchers)
+        {
+            ProjectileManager.Instance().Explode(launcher);
+        }
+
+        PlayerManager.Instance().RemoveFromSelection(this);
     }
 }

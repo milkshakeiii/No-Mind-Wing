@@ -50,16 +50,19 @@ public class PlayerManager : MonoBehaviour
 
     private IEnumerator Blink()
     {
+        Dictionary<Vessel, Color> vesselToColor = new Dictionary<Vessel, Color>();
         while (true)
         {
             foreach (Vessel vessel in selection)
             {
+                vesselToColor[vessel] = vessel.gameObject.GetComponent<SpriteRenderer>().color;
                 vessel.gameObject.GetComponent<SpriteRenderer>().color = Color.green;
             }
             yield return new WaitForSeconds(0.3f);
             foreach (Vessel vessel in selection)
             {
-                vessel.gameObject.GetComponent<SpriteRenderer>().color = Color.white;
+                if (vesselToColor.ContainsKey(vessel))
+                    vessel.gameObject.GetComponent<SpriteRenderer>().color = vesselToColor[vessel];
             }
             yield return new WaitForSeconds(1.7f);
         }
@@ -86,5 +89,10 @@ public class PlayerManager : MonoBehaviour
     public void AddToSelection(List<string> designations)
     {
         selection.AddRange(VesselManager.Instance().GetVesselsByDesignation(designations));
+    }
+
+    public void RemoveFromSelection(Vessel vessel)
+    {
+        selection.Remove(vessel);
     }
 }
