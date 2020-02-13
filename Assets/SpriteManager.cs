@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class SpriteManager : MonoBehaviour
 {
+    public const int SPRITE_SIZE = 210;
+
     private struct VesselSprite
     {
         public string name;
@@ -47,7 +49,7 @@ public class SpriteManager : MonoBehaviour
     private void LoadDefaultSprite(string fileName)
     {
         Texture2D newTexture = (Texture2D)Resources.Load("Sprites/" + fileName);
-        Sprite newSprite = Sprite.Create(newTexture, new Rect(0, 0, 196, 196), new Vector2(0.5f, 0.5f));
+        Sprite newSprite = Sprite.Create(newTexture, new Rect(0, 0, SPRITE_SIZE, SPRITE_SIZE), new Vector2(0.5f, 0.5f));
         VesselSprite newVesselSprite = new VesselSprite
         {
             name = fileName,
@@ -60,12 +62,12 @@ public class SpriteManager : MonoBehaviour
     private void LoadCustomSprite(string path)
     {
         byte[] data = System.IO.File.ReadAllBytes(path);
-        Texture2D texture = new Texture2D(196, 196);
+        Texture2D texture = new Texture2D(SPRITE_SIZE, SPRITE_SIZE);
         texture.LoadImage(data);
-        Sprite newSprite = Sprite.Create(texture, new Rect(0, 0, 196, 196), new Vector2(0.5f, 0.5f));
-        for (int i = 0; i < 196; i++)
+        Sprite newSprite = Sprite.Create(texture, new Rect(0, 0, SPRITE_SIZE, SPRITE_SIZE), new Vector2(0.5f, 0.5f));
+        for (int i = 0; i < SPRITE_SIZE; i++)
         {
-            for (int j = 0; j < 196; j++)
+            for (int j = 0; j < SPRITE_SIZE; j++)
             {
                 Color pixel = newSprite.texture.GetPixels(i, j, 1, 1)[0];
                 if (pixel.r == 0f && pixel.g == 0f && pixel.b == 0f)
