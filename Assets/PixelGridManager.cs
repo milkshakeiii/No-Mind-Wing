@@ -5,10 +5,47 @@ using UnityEngine;
 public class PixelGridManager : MonoBehaviour
 {
     private UnityEngine.UI.Button[,] buttonGrid = new UnityEngine.UI.Button[0, 0];
+    private int selectedColor = 0;
+    private Dictionary<int, HashSet<UnityEngine.UI.Image>> colorButtons = new Dictionary<int, HashSet<UnityEngine.UI.Image>>();
+    private Dictionary<int, Color> colorsByNumber = new Dictionary<int, Color>();
+
+    private static PixelGridManager instance;
+
+    public void SelectColor(int colorNumber)
+    {
+        selectedColor = colorNumber;
+    }
+
+    public void SetColor(int colorNumber, Color color)
+    {
+        colorsByNumber[colorNumber] = color;
+        if (colorButtons.ContainsKey(colorNumber))
+        {
+            foreach (UnityEngine.UI.Image image in colorButtons[colorNumber])
+                image.color = color;
+        }
+    }
+
+    public Color SelectedColor()
+    {
+        return colorsByNumber[selectedColor];
+    }
+
+    public static PixelGridManager Instance()
+    {
+        return instance;
+    }
+
+    public int CurrentPixelsPerBox()
+    {
+        return SpriteManager.SPRITE_SIZE / buttonGrid.GetLength(0);
+    }
 
     // Start is called before the first frame update
     void Start()
     {
+        instance = this;
+
         SetPixelSize();
 
         SpawnButtons(10);
@@ -33,7 +70,7 @@ public class PixelGridManager : MonoBehaviour
         gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(rectTransformSize, rectTransformSize);
     }
 
-    private void SpawnButtons(int buttonSize)
+    public void SpawnButtons(int buttonSize)
     {
         if (SpriteManager.SPRITE_SIZE % buttonSize != 0)
         {
@@ -63,6 +100,7 @@ public class PixelGridManager : MonoBehaviour
                 rectTransform.offsetMax = Vector2.zero;
                 UnityEngine.UI.Image image = buttonObject.AddComponent<UnityEngine.UI.Image>();
                 image.sprite = SpriteManager.Instance().SpriteFromName("square");
+                image.color = Color.black;
                 //buttonScript.targetGraphic = image;
                 PixelGridButton buttonScript = buttonObject.AddComponent<PixelGridButton>();
                 buttonComponent.onClick.AddListener(buttonScript.OnClicked);
@@ -70,9 +108,19 @@ public class PixelGridManager : MonoBehaviour
         }
     }
 
-    private void ButtonClicked()
+    public void ButtonClicked(PixelGridButton button)
     {
-        
+        UnityEngine.UI.Image image = button.gameObject.GetComponent<UnityEngine.UI.Image>();
+        image.color = SelectedColor();
+        foreach (int key in colorButtons.Keys)
+        {
+            colorButtons[key].Remove(image);
+        }
+        if (!colorButtons.ContainsKey(selectedColor))
+        {
+            colorButtons[selectedColor] = new HashSet<UnityEngine.UI.Image>(); 
+        }
+        colorButtons[selectedColor].Add(image);
     }
 
     // Update is called once per frame

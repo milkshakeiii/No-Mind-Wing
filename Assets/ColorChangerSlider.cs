@@ -12,11 +12,16 @@ public class ColorChangerSlider : MonoBehaviour
 
     public void OnValueChanged(float value)
     {
+        Color color = Color.white;
+
         if (red)
-            targetImage.color = new Color(value, targetImage.color.g, targetImage.color.b);
+            color = new Color(value, targetImage.color.g, targetImage.color.b);
         if (green)
-            targetImage.color = new Color(targetImage.color.r, value, targetImage.color.b);
+            color = new Color(targetImage.color.r, value, targetImage.color.b);
         if (blue)
-            targetImage.color = new Color(targetImage.color.r, targetImage.color.g, value);
+            color = new Color(targetImage.color.r, targetImage.color.g, value);
+
+        targetImage.color = color;
+        targetImage.gameObject.GetComponent<ColorSelector>().ColorChange();
     }
 }
