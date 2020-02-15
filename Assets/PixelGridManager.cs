@@ -21,8 +21,6 @@ public class PixelGridManager : MonoBehaviour
     private Dictionary<int, HashSet<UnityEngine.UI.Image>> colorButtons = new Dictionary<int, HashSet<UnityEngine.UI.Image>>();
     private Dictionary<int, Color> colorsByNumber = new Dictionary<int, Color>();
 
-    private List<VesselPart> placedParts = new List<VesselPart>();
-
     private static PixelGridManager instance;
 
     public int GetSizeFactor()
@@ -102,7 +100,7 @@ public class PixelGridManager : MonoBehaviour
             for (int j = 0; j < buttonGrid.GetLength(1); j++)
             {
                 UnityEngine.UI.Button button = buttonGrid[i, j];
-                Destroy(button);
+                Destroy(button.gameObject);
             }
         }
         int buttonGridSize = SpriteManager.SPRITE_SIZE / buttonSize;
@@ -126,8 +124,10 @@ public class PixelGridManager : MonoBehaviour
                 PixelGridButton buttonScript = buttonObject.AddComponent<PixelGridButton>();
                 buttonScript.Initialize(new Vector2(i, j));
                 buttonComponent.onClick.AddListener(buttonScript.OnClicked);
+                buttonGrid[i, j] = buttonComponent;
             }
         }
+        PartPlacementManager.Instance().ResetParts();
     }
 
     public void SetPartPlacing()
@@ -165,6 +165,12 @@ public class PixelGridManager : MonoBehaviour
             }
             colorButtons[selectedColor].Add(image);
         }
+    }
+
+    //start here
+    private void Save()
+    {
+
     }
 
     // Update is called once per frame

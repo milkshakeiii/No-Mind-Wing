@@ -10,7 +10,8 @@ public class PartPlacementManager : MonoBehaviour
     {
         quality1 = 1f,
         quality2 = 1f,
-        size = 1f
+        size = 0.5f,
+        facing = 0f,
     };
     private Dictionary<PixelGridButton, VesselPart> buttonToPlacedPart = new Dictionary<PixelGridButton, VesselPart>();
 
@@ -19,6 +20,11 @@ public class PartPlacementManager : MonoBehaviour
     public static PartPlacementManager Instance()
     {
         return instance;
+    }
+
+    public void ResetParts()
+    {
+        buttonToPlacedPart = new Dictionary<PixelGridButton, VesselPart>();
     }
     
     public void PlacePart(PixelGridButton button)
@@ -43,6 +49,7 @@ public class PartPlacementManager : MonoBehaviour
                          PixelGridManager.Instance().GetSizeFactor() / 2;
         rectTransform.offsetMin = Vector2.one * -1 * halfsize;
         rectTransform.offsetMax = Vector2.one * halfsize;
+        rectTransform.eulerAngles = new Vector3(0, 0, partInProgress.facing);
         UnityEngine.UI.Image image = placedPart.AddComponent<UnityEngine.UI.Image>();
         string spriteName;
         if (partInProgress.partType == VesselPartType.Bay)
@@ -81,19 +88,25 @@ public class PartPlacementManager : MonoBehaviour
     public void SetQuality1(float quality1)
     {
         partInProgress.quality1 = quality1;
-        UpdateDemoImageSizeAndColor();
+        UpdateDemoImage();
     }
 
     public void SetQuality2(float quality2)
     {
         partInProgress.quality2 = quality2;
-        UpdateDemoImageSizeAndColor();
+        UpdateDemoImage();
     }
 
     public void SetSize(float size)
     {
         partInProgress.size = size;
-        UpdateDemoImageSizeAndColor();
+        UpdateDemoImage();
+    }
+
+    public void SetFacing(float facing)
+    {
+        partInProgress.facing = facing;
+        UpdateDemoImage();
     }
 
     private float GetPartColor()
@@ -101,13 +114,14 @@ public class PartPlacementManager : MonoBehaviour
         return (partInProgress.quality1 + partInProgress.quality2) / 2;
     }
 
-    private void UpdateDemoImageSizeAndColor()
+    private void UpdateDemoImage()
     {
         float averageQuality = GetPartColor();
         demoImage.color = Color.white * averageQuality;
         demoImage.gameObject.GetComponent<RectTransform>().sizeDelta = Vector2.one * 
                                                                        SpriteManager.SPRITE_SIZE *
                                                                        partInProgress.size;
+        demoImage.rectTransform.eulerAngles = new Vector3(0, 0, partInProgress.facing);
     }
 
     public void SelectBay()
@@ -135,6 +149,8 @@ public class PartPlacementManager : MonoBehaviour
     void Start()
     {
         instance = this;
+        
+        UpdateDemoImage();
     }
 
     // Update is called once per frame
