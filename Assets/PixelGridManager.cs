@@ -135,6 +135,11 @@ public class PixelGridManager : MonoBehaviour
         currentTool = ToolType.placePart;
     }
 
+    public void SetPartDeleting()
+    {
+        currentTool = ToolType.deletePart;
+    }
+
     public void ButtonClicked(PixelGridButton button)
     {
         if (currentTool == ToolType.placePart)

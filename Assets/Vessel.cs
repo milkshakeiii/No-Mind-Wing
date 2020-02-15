@@ -12,8 +12,8 @@ public class Vessel : MonoBehaviour
     private List<Bay> bays = new List<Bay>();
     private List<Launcher> launchers = new List<Launcher>();
 
-    private const float partSizeFactor = 0.2f;
-    private const float damageFactor = 1f;
+    public const float partSizeFactor = 0.5f;
+    public const float damageFactor = 1f;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
