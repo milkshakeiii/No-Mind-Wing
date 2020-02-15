@@ -30,9 +30,14 @@ public class SpriteManager : MonoBehaviour
         LoadSprites();
     }
 
+    public string GetCustomSpritesPath()
+    {
+        return System.IO.Path.Combine(Application.persistentDataPath, "Sprites");
+    }
+
     public void LoadSprites()
     {
-        string customSpritesPath = System.IO.Path.Combine(Application.persistentDataPath, "Sprites");
+        string customSpritesPath = GetCustomSpritesPath();
         if (!System.IO.Directory.Exists(customSpritesPath))
             System.IO.Directory.CreateDirectory(customSpritesPath);
         List<string> customSpritePaths = new List<string>();
@@ -60,6 +65,17 @@ public class SpriteManager : MonoBehaviour
         vesselSprites[fileName] = newVesselSprite;
     }
 
+    public void SaveCustomSprite(Texture2D texture, string name)
+    {
+        byte[] data = texture.EncodeToPNG();
+        string filepath = System.IO.Path.Combine(GetCustomSpritesPath(), name);
+        if (System.IO.File.Exists(filepath))
+        {
+            System.IO.File.Delete(filepath);
+        }
+        System.IO.File.WriteAllBytes(filepath, data);
+    }
+
     private void LoadCustomSprite(string path)
     {
         byte[] data = System.IO.File.ReadAllBytes(path);
@@ -72,9 +88,9 @@ public class SpriteManager : MonoBehaviour
             {
                 Color pixel = newSprite.texture.GetPixels(i, j, 1, 1)[0];
                 if (pixel.r == 0f && pixel.g == 0f && pixel.b == 0f)
-                    newSprite.texture.SetPixel(i, j, new Color(1, 1, 1, 0));
+                    newSprite.texture.SetPixel(i, j, new Color(0, 0, 0, 0));
                 else
-                    newSprite.texture.SetPixel(i, j, new Color(1, 1, 1, 1));
+                    newSprite.texture.SetPixel(i, j, new Color(pixel.r, pixel.g, pixel.b, 1));
             }
         }
         newSprite.texture.Apply();
@@ -87,6 +103,7 @@ public class SpriteManager : MonoBehaviour
             vesselType = VesselType.Square
         };
         vesselSprites[fileName] = newVesselSprite;
+        Debug.Log("Loaded sprite: " + fileName.ToString());
     }
 
     public bool SpriteNameIsGood(string name)

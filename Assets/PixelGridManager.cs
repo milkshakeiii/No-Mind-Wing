@@ -17,6 +17,8 @@ public class PixelGridManager : MonoBehaviour
 
     private UnityEngine.UI.Button[,] buttonGrid = new UnityEngine.UI.Button[0, 0];
 
+    private string vesselName = "unnamed";
+
     private int selectedColor = 0;
     private Dictionary<int, HashSet<UnityEngine.UI.Image>> colorButtons = new Dictionary<int, HashSet<UnityEngine.UI.Image>>();
     private Dictionary<int, Color> colorsByNumber = new Dictionary<int, Color>();
@@ -167,10 +169,30 @@ public class PixelGridManager : MonoBehaviour
         }
     }
 
-    //start here
     private void Save()
     {
+        Texture2D texture = new Texture2D(SpriteManager.SPRITE_SIZE, SpriteManager.SPRITE_SIZE);
+        int currentPixelsPerBox = CurrentPixelsPerBox();
+        for (int i = 0; i < buttonGrid.GetLength(0); i++)
+        {
+            for (int j = 0; j < buttonGrid.GetLength(1); j++)
+            {
+                Color color = buttonGrid[i, j].image.color;
+                for (int k = 0; k < currentPixelsPerBox; k++)
+                {
+                    for (int l = 0; l < currentPixelsPerBox; l++)
+                    {
+                        texture.SetPixel(i + k, j + l, color);
+                    }
+                }
+            }
+        }
+        SpriteManager.Instance().SaveCustomSprite(texture, vesselName);
+    }
 
+    public void SetVesselName(string newVesselName)
+    {
+        vesselName = newVesselName;
     }
 
     // Update is called once per frame
