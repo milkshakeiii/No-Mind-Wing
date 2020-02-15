@@ -4,16 +4,16 @@ using UnityEngine;
 
 public class PixelGridButton : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private Vector2 position;
+
+    public void Initialize(Vector2 newPosition)
     {
-        
+        position = newPosition;
     }
 
-    // Update is called once per frame
-    void Update()
+    public Vector2 GetPosition()
     {
-        
+        return position;
     }
 
     public void OnClicked()

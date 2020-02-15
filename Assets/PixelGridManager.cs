@@ -4,16 +4,36 @@ using UnityEngine;
 
 public class PixelGridManager : MonoBehaviour
 {
+    private enum ToolType
+    {
+        noTool = 0,
+        paint = 1,
+        placePart = 2,
+        deletePart = 3
+    }
+    private ToolType currentTool = ToolType.noTool;
+
+    private int sizeFactor;
+
     private UnityEngine.UI.Button[,] buttonGrid = new UnityEngine.UI.Button[0, 0];
+
     private int selectedColor = 0;
     private Dictionary<int, HashSet<UnityEngine.UI.Image>> colorButtons = new Dictionary<int, HashSet<UnityEngine.UI.Image>>();
     private Dictionary<int, Color> colorsByNumber = new Dictionary<int, Color>();
 
+    private List<VesselPart> placedParts = new List<VesselPart>();
+
     private static PixelGridManager instance;
+
+    public int GetSizeFactor()
+    {
+        return sizeFactor;
+    }
 
     public void SelectColor(int colorNumber)
     {
         selectedColor = colorNumber;
+        currentTool = ToolType.paint;
     }
 
     public void SetColor(int colorNumber, Color color)
@@ -26,7 +46,7 @@ public class PixelGridManager : MonoBehaviour
         }
     }
 
-    public Color SelectedColor()
+    private Color SelectedColor()
     {
         return colorsByNumber[selectedColor];
     }
@@ -68,6 +88,7 @@ public class PixelGridManager : MonoBehaviour
         }
         int rectTransformSize = imageEndSize * multiplesAvailable;
         gameObject.GetComponent<RectTransform>().sizeDelta = new Vector2(rectTransformSize, rectTransformSize);
+        sizeFactor = multiplesAvailable;
     }
 
     public void SpawnButtons(int buttonSize)
@@ -103,24 +124,42 @@ public class PixelGridManager : MonoBehaviour
                 image.color = Color.black;
                 //buttonScript.targetGraphic = image;
                 PixelGridButton buttonScript = buttonObject.AddComponent<PixelGridButton>();
+                buttonScript.Initialize(new Vector2(i, j));
                 buttonComponent.onClick.AddListener(buttonScript.OnClicked);
             }
         }
     }
 
+    public void SetPartPlacing()
+    {
+        currentTool = ToolType.placePart;
+    }
+
     public void ButtonClicked(PixelGridButton button)
     {
-        UnityEngine.UI.Image image = button.gameObject.GetComponent<UnityEngine.UI.Image>();
-        image.color = SelectedColor();
-        foreach (int key in colorButtons.Keys)
+        if (currentTool == ToolType.placePart)
         {
-            colorButtons[key].Remove(image);
+            PartPlacementManager.Instance().PlacePart(button);
+            currentTool = ToolType.noTool;
         }
-        if (!colorButtons.ContainsKey(selectedColor))
+        else if (currentTool == ToolType.deletePart)
         {
-            colorButtons[selectedColor] = new HashSet<UnityEngine.UI.Image>(); 
+            PartPlacementManager.Instance().DeletePart(button);
         }
-        colorButtons[selectedColor].Add(image);
+        else if (currentTool == ToolType.paint) //regular color-painting click
+        {
+            UnityEngine.UI.Image image = button.gameObject.GetComponent<UnityEngine.UI.Image>();
+            image.color = SelectedColor();
+            foreach (int key in colorButtons.Keys)
+            {
+                colorButtons[key].Remove(image);
+            }
+            if (!colorButtons.ContainsKey(selectedColor))
+            {
+                colorButtons[selectedColor] = new HashSet<UnityEngine.UI.Image>();
+            }
+            colorButtons[selectedColor].Add(image);
+        }
     }
 
     // Update is called once per frame
