@@ -25,7 +25,8 @@ public class PartPlacementManager : MonoBehaviour
     {
         if (buttonToPlacedPart.ContainsKey(button))
         {
-            Debug.Log("There is already a part there");
+            Debug.Log("Dictionary already contains key " + button.ToString());
+            Debug.Log("There is already a part there.");
             return;
         }
 
@@ -36,7 +37,6 @@ public class PartPlacementManager : MonoBehaviour
         placedPart.transform.SetParent(button.transform);
         rectTransform.anchorMin = Vector2.zero;
         rectTransform.anchorMax = Vector2.zero;
-        rectTransform.position = new Vector3(rectTransform.position.x, rectTransform.position.y, -1f);
         float halfsize = partInProgress.size * 
                          Vessel.partSizeFactor *
                          SpriteManager.SPRITE_SIZE * 
@@ -53,15 +53,29 @@ public class PartPlacementManager : MonoBehaviour
             spriteName = "triangle";
         image.sprite = SpriteManager.Instance().SpriteFromName(spriteName);
         image.color = Color.white * GetPartColor();
+        image.raycastTarget = false;
 
         VesselPart newPart = partInProgress;
         buttonToPlacedPart[button] = newPart;
+
+        GameObject deleter = new GameObject("Deleter");
+        rectTransform = deleter.AddComponent<RectTransform>();
+        deleter.transform.SetParent(button.transform);
+        rectTransform.anchorMin = Vector2.zero;
+        rectTransform.anchorMax = Vector2.one;
+        rectTransform.offsetMin = Vector2.zero;
+        rectTransform.offsetMax = Vector2.zero;
+        image = deleter.AddComponent<UnityEngine.UI.Image>();
+        image.sprite = SpriteManager.Instance().SpriteFromName("X");
+        image.color = new Color(0.75f, 0, 0);
+        image.raycastTarget = false;
     }
 
     public void DeletePart(PixelGridButton button)
     {
         buttonToPlacedPart.Remove(button);
-        Destroy(button.gameObject.transform.GetChild(0).gameObject);
+        for (int i = 0; i < button.transform.childCount; i++)
+            Destroy(button.transform.GetChild(i).gameObject);
     }
 
     public void SetQuality1(float quality1)

@@ -44,6 +44,7 @@ public class SpriteManager : MonoBehaviour
         LoadDefaultSprite("circle");
         LoadDefaultSprite("halfcircle");
         LoadDefaultSprite("triangle");
+        LoadDefaultSprite("X");
     }
 
     private void LoadDefaultSprite(string fileName)
