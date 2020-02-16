@@ -17,8 +17,6 @@ public class PixelGridManager : MonoBehaviour
 
     private UnityEngine.UI.Button[,] buttonGrid = new UnityEngine.UI.Button[0, 0];
 
-    private string vesselName = "unnamed";
-
     private int selectedColor = 0;
     private Dictionary<int, HashSet<UnityEngine.UI.Image>> colorButtons = new Dictionary<int, HashSet<UnityEngine.UI.Image>>();
     private Dictionary<int, Color> colorsByNumber = new Dictionary<int, Color>();
@@ -169,7 +167,7 @@ public class PixelGridManager : MonoBehaviour
         }
     }
 
-    private void Save()
+    public void SaveTexture(string vesselName)
     {
         Texture2D texture = new Texture2D(SpriteManager.SPRITE_SIZE, SpriteManager.SPRITE_SIZE);
         int currentPixelsPerBox = CurrentPixelsPerBox();
@@ -190,11 +188,14 @@ public class PixelGridManager : MonoBehaviour
         SpriteManager.Instance().SaveCustomSprite(texture, vesselName);
     }
 
-    private void Load(string path)
+    public void LoadTexture(Texture2D texture)
     {
-        string spriteName = SpriteManager.Instance().LoadCustomSprite(path);
-        Sprite sprite = SpriteManager.Instance().SpriteFromName(spriteName);
-        Texture2D texture = sprite.texture;
+        if (texture.width != SpriteManager.SPRITE_SIZE || texture.height != SpriteManager.SPRITE_SIZE)
+        {
+            throw new UnityException("I expected a square texture with sides of pixel length: " 
+                                     + SpriteManager.SPRITE_SIZE.ToString());
+        }
+
         int shortestChain = 10;
         int currentChainVertical = 0;
         int currentChainHorizontal = 0;
@@ -224,11 +225,21 @@ public class PixelGridManager : MonoBehaviour
                 }
             }
         }
-    }
 
-    public void SetVesselName(string newVesselName)
-    {
-        vesselName = newVesselName;
+        if (SpriteManager.SPRITE_SIZE % shortestChain != 0)
+        {
+            throw new UnityException("This texture is divided into units which don't divide SPRITE_SIZE");
+        }
+
+        SpawnButtons(shortestChain);
+
+        for (int i = 0; i < SpriteManager.SPRITE_SIZE; i += shortestChain)
+        {
+            for (int j = 0; j < SpriteManager.SPRITE_SIZE; j += shortestChain)
+            {
+                buttonGrid[i, j].image.color = texture.GetPixel(i * shortestChain, j * shortestChain);
+            }
+        }
     }
 
     // Update is called once per frame

@@ -74,6 +74,7 @@ public class SpriteManager : MonoBehaviour
             System.IO.File.Delete(filepath);
         }
         System.IO.File.WriteAllBytes(filepath, data);
+        LoadCustomSprite(filepath);
     }
 
     public string LoadCustomSprite(string path)

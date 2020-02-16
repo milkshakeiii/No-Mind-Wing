@@ -22,6 +22,11 @@ public class PartPlacementManager : MonoBehaviour
         return instance;
     }
 
+    public List<VesselPart> GetListOfParts()
+    {
+        return new List<VesselPart>(buttonToPlacedPart.Values);
+    }
+
     public void ResetParts()
     {
         buttonToPlacedPart = new Dictionary<PixelGridButton, VesselPart>();
@@ -146,7 +151,7 @@ public class PartPlacementManager : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         instance = this;
         
