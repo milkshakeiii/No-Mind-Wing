@@ -175,12 +175,12 @@ public class PixelGridManager : MonoBehaviour
         {
             for (int j = 0; j < buttonGrid.GetLength(1); j++)
             {
-                Color color = buttonGrid[i, j].image.color;
+                Color color = buttonGrid[i, j].GetComponent<UnityEngine.UI.Image>().color;
                 for (int k = 0; k < currentPixelsPerBox; k++)
                 {
                     for (int l = 0; l < currentPixelsPerBox; l++)
                     {
-                        texture.SetPixel(i + k, j + l, color);
+                        texture.SetPixel(i * currentPixelsPerBox + k, j * currentPixelsPerBox + l, color);
                     }
                 }
             }
@@ -214,6 +214,7 @@ public class PixelGridManager : MonoBehaviour
                 else
                 {
                     shortestChain = Mathf.Min(currentChainVertical, shortestChain);
+                    currentChainVertical = 1;
                 }
                 if ((i == 0 && j == 0) || currentColorHorizontal == lastColorHorizontal)
                 {
@@ -222,7 +223,10 @@ public class PixelGridManager : MonoBehaviour
                 else
                 {
                     shortestChain = Mathf.Min(currentChainHorizontal, shortestChain);
+                    currentChainHorizontal = 1;
                 }
+                lastColorVertical = currentColorVertical;
+                lastColorHorizontal = currentColorHorizontal;
             }
         }
 
@@ -231,13 +235,21 @@ public class PixelGridManager : MonoBehaviour
             throw new UnityException("This texture is divided into units which don't divide SPRITE_SIZE");
         }
 
+        Debug.Log("I detected " + shortestChain.ToString() + " pixel sided squares.");
         SpawnButtons(shortestChain);
 
-        for (int i = 0; i < SpriteManager.SPRITE_SIZE; i += shortestChain)
+        for (int i = 0; i < SpriteManager.SPRITE_SIZE / shortestChain; i ++)
         {
-            for (int j = 0; j < SpriteManager.SPRITE_SIZE; j += shortestChain)
+            for (int j = 0; j < SpriteManager.SPRITE_SIZE / shortestChain; j++)
             {
-                buttonGrid[i, j].image.color = texture.GetPixel(i * shortestChain, j * shortestChain);
+                UnityEngine.UI.Button button = buttonGrid[i, j];
+                UnityEngine.UI.Image image = button.gameObject.GetComponent<UnityEngine.UI.Image>();
+                Color color = texture.GetPixel(i * shortestChain, j * shortestChain);
+                if (color.a == 0)
+                {
+                    color = Color.black;
+                }
+                image.color = color;
             }
         }
     }
