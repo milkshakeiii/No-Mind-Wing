@@ -190,6 +190,42 @@ public class PixelGridManager : MonoBehaviour
         SpriteManager.Instance().SaveCustomSprite(texture, vesselName);
     }
 
+    private void Load(string path)
+    {
+        string spriteName = SpriteManager.Instance().LoadCustomSprite(path);
+        Sprite sprite = SpriteManager.Instance().SpriteFromName(spriteName);
+        Texture2D texture = sprite.texture;
+        int shortestChain = 10;
+        int currentChainVertical = 0;
+        int currentChainHorizontal = 0;
+        Color lastColorVertical = Color.white;
+        Color lastColorHorizontal = Color.white;
+        for (int i = 0; i < SpriteManager.SPRITE_SIZE; i++)
+        {
+            for (int j = 0; j < SpriteManager.SPRITE_SIZE; j++)
+            {
+                Color currentColorVertical = texture.GetPixel(i, j);
+                Color currentColorHorizontal = texture.GetPixel(j, i);
+                if ((i == 0 && j == 0) || currentColorVertical == lastColorVertical)
+                {
+                    currentChainVertical++;
+                }
+                else
+                {
+                    shortestChain = Mathf.Min(currentChainVertical, shortestChain);
+                }
+                if ((i == 0 && j == 0) || currentColorHorizontal == lastColorHorizontal)
+                {
+                    currentChainHorizontal++;
+                }
+                else
+                {
+                    shortestChain = Mathf.Min(currentChainHorizontal, shortestChain);
+                }
+            }
+        }
+    }
+
     public void SetVesselName(string newVesselName)
     {
         vesselName = newVesselName;

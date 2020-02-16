@@ -76,7 +76,7 @@ public class SpriteManager : MonoBehaviour
         System.IO.File.WriteAllBytes(filepath, data);
     }
 
-    private void LoadCustomSprite(string path)
+    public string LoadCustomSprite(string path)
     {
         byte[] data = System.IO.File.ReadAllBytes(path);
         Texture2D texture = new Texture2D(SPRITE_SIZE, SPRITE_SIZE);
@@ -104,6 +104,8 @@ public class SpriteManager : MonoBehaviour
         };
         vesselSprites[fileName] = newVesselSprite;
         Debug.Log("Loaded sprite: " + fileName.ToString());
+
+        return fileName;
     }
 
     public bool SpriteNameIsGood(string name)
