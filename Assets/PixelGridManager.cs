@@ -130,6 +130,11 @@ public class PixelGridManager : MonoBehaviour
         PartPlacementManager.Instance().ResetParts();
     }
 
+    public PixelGridButton ButtonFromPosition(Vector2 position)
+    {
+        return buttonGrid[(int)position.x, (int)position.y].gameObject.GetComponent<PixelGridButton>();
+    }
+
     public void SetPartPlacing()
     {
         currentTool = ToolType.placePart;
@@ -144,7 +149,7 @@ public class PixelGridManager : MonoBehaviour
     {
         if (currentTool == ToolType.placePart)
         {
-            PartPlacementManager.Instance().PlacePart(button);
+            PartPlacementManager.Instance().PlacePartFromUI(button);
             currentTool = ToolType.noTool;
         }
         else if (currentTool == ToolType.deletePart)

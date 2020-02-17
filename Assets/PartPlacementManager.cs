@@ -12,6 +12,7 @@ public class PartPlacementManager : MonoBehaviour
         quality2 = 1f,
         size = 0.5f,
         facing = 0f,
+        position = Vector2.zero,
     };
     private Dictionary<PixelGridButton, VesselPart> buttonToPlacedPart = new Dictionary<PixelGridButton, VesselPart>();
 
@@ -32,7 +33,12 @@ public class PartPlacementManager : MonoBehaviour
         buttonToPlacedPart = new Dictionary<PixelGridButton, VesselPart>();
     }
     
-    public void PlacePart(PixelGridButton button)
+    public void PlacePartFromUI(PixelGridButton button)
+    {
+        PlacePart(button, partInProgress);
+    }
+
+    public void PlacePart(PixelGridButton button, VesselPart partToPlace)
     {
         if (buttonToPlacedPart.ContainsKey(button))
         {
@@ -48,18 +54,18 @@ public class PartPlacementManager : MonoBehaviour
         placedPart.transform.SetParent(button.transform);
         rectTransform.anchorMin = Vector2.zero;
         rectTransform.anchorMax = Vector2.zero;
-        float halfsize = partInProgress.size * 
+        float halfsize = partToPlace.size * 
                          Vessel.partSizeFactor *
                          SpriteManager.SPRITE_SIZE * 
                          PixelGridManager.Instance().GetSizeFactor() / 2;
         rectTransform.offsetMin = Vector2.one * -1 * halfsize;
         rectTransform.offsetMax = Vector2.one * halfsize;
-        rectTransform.eulerAngles = new Vector3(0, 0, partInProgress.facing);
+        rectTransform.eulerAngles = new Vector3(0, 0, partToPlace.facing);
         UnityEngine.UI.Image image = placedPart.AddComponent<UnityEngine.UI.Image>();
         string spriteName;
-        if (partInProgress.partType == VesselPartType.Bay)
+        if (partToPlace.partType == VesselPartType.Bay)
             spriteName = "square";
-        else if (partInProgress.partType == VesselPartType.Engine)
+        else if (partToPlace.partType == VesselPartType.Engine)
             spriteName = "halfcircle";
         else //(partInProgress.partType == VesselPartType.Launcher)
             spriteName = "triangle";
@@ -67,7 +73,8 @@ public class PartPlacementManager : MonoBehaviour
         image.color = Color.white * GetPartColor();
         image.raycastTarget = false;
 
-        VesselPart newPart = partInProgress;
+        partToPlace.position = button.GetPosition();
+        VesselPart newPart = partToPlace;
         buttonToPlacedPart[button] = newPart;
 
         GameObject deleter = new GameObject("Deleter");

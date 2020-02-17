@@ -25,7 +25,7 @@ public class SaveButton : MonoBehaviour
             else if (part.partType == VesselPartType.Engine)
                 buildstring += "-engine ";
             else if (part.partType == VesselPartType.Launcher)
-                buildstring += "-launcher";
+                buildstring += "-launcher ";
             buildstring += part.size.ToString() + " ";
             buildstring += part.quality1.ToString() + " ";
             buildstring += part.quality2.ToString() + " ";
