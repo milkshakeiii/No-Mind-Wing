@@ -164,12 +164,17 @@ public class PixelGridManager : MonoBehaviour
             {
                 colorButtons[key].Remove(image);
             }
-            if (!colorButtons.ContainsKey(selectedColor))
-            {
-                colorButtons[selectedColor] = new HashSet<UnityEngine.UI.Image>();
-            }
-            colorButtons[selectedColor].Add(image);
+            ColorButtonsAdd(selectedColor, image);
         }
+    }
+
+    private void ColorButtonsAdd(int key, UnityEngine.UI.Image value)
+    {
+        if (!colorButtons.ContainsKey(key))
+        {
+            colorButtons[key] = new HashSet<UnityEngine.UI.Image>();
+        }
+        colorButtons[key].Add(value);
     }
 
     public void SaveTexture(string vesselName)
@@ -243,6 +248,8 @@ public class PixelGridManager : MonoBehaviour
         Debug.Log("I detected " + shortestChain.ToString() + " pixel sided squares.");
         SpawnButtons(shortestChain);
 
+        Color color1 = Color.white;
+        Color color2 = Color.white;
         for (int i = 0; i < SpriteManager.SPRITE_SIZE / shortestChain; i ++)
         {
             for (int j = 0; j < SpriteManager.SPRITE_SIZE / shortestChain; j++)
@@ -253,6 +260,21 @@ public class PixelGridManager : MonoBehaviour
                 if (color.a == 0)
                 {
                     color = Color.black;
+                    ColorButtonsAdd(1, image);
+                }
+                else if (color == Color.white)
+                {
+                    ColorButtonsAdd(0, image);
+                }
+                else if (color1 == Color.white || color == color1)
+                {
+                    color1 = color;
+                    ColorButtonsAdd(2, image);
+                }
+                else
+                {
+                    color2 = color;
+                    ColorButtonsAdd(3, image);
                 }
                 image.color = color;
             }
