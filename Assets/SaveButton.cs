@@ -29,8 +29,9 @@ public class SaveButton : MonoBehaviour
             buildstring += part.size.ToString() + " ";
             buildstring += part.quality1.ToString() + " ";
             buildstring += part.quality2.ToString() + " ";
-            buildstring += part.position.x.ToString() + " ";
-            buildstring += part.position.y.ToString() + " ";
+            Vector2 positionInRelativeForm = PixelGridManager.Instance().GetRelativeForm(part.position);
+            buildstring += positionInRelativeForm.x.ToString() + " ";
+            buildstring += positionInRelativeForm.y.ToString() + " ";
             buildstring += part.facing.ToString() + " ";
         }
 

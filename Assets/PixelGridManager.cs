@@ -28,6 +28,13 @@ public class PixelGridManager : MonoBehaviour
         return sizeFactor;
     }
 
+    public Vector2 GetRelativeForm(Vector2 gridPosition)
+    {
+        return -Vector2.one + 
+               2 * (gridPosition * CurrentPixelsPerBox() / SpriteManager.SPRITE_SIZE) +
+               Vector2.one * (CurrentPixelsPerBox() / SpriteManager.SPRITE_SIZE);
+    }
+
     public void SelectColor(int colorNumber)
     {
         selectedColor = colorNumber;

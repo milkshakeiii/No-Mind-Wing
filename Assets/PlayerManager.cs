@@ -15,44 +15,44 @@ public class PlayerManager : MonoBehaviour
 
     private Dictionary<ResourceType, float> stockpiles = new Dictionary<ResourceType, float>();
 
-    private UnityEngine.Input.KeyCode[] engineKeyCodes = new UnityEngine.Input.KeyCode[9]
+    private UnityEngine.KeyCode[] engineKeyCodes = new UnityEngine.KeyCode[9]
     {
-        UnityEngine.Input.KeyCode.A,
-        UnityEngine.Input.KeyCode.S,
-        UnityEngine.Input.KeyCode.D,
-        UnityEngine.Input.KeyCode.W,
-        UnityEngine.Input.KeyCode.Q,
-        UnityEngine.Input.KeyCode.E,
-        UnityEngine.Input.KeyCode.Z,
-        UnityEngine.Input.KeyCode.X,
-        UnityEngine.Input.KeyCode.C,
-    }
+        UnityEngine.KeyCode.A,
+        UnityEngine.KeyCode.S,
+        UnityEngine.KeyCode.D,
+        UnityEngine.KeyCode.W,
+        UnityEngine.KeyCode.Q,
+        UnityEngine.KeyCode.E,
+        UnityEngine.KeyCode.Z,
+        UnityEngine.KeyCode.X,
+        UnityEngine.KeyCode.C,
+    };
 
-    private UnityEngine.Input.KeyCode[] launcherKeyCodes = new UnityEngine.Input.KeyCode[9]
+    private UnityEngine.KeyCode[] launcherKeyCodes = new UnityEngine.KeyCode[9]
     {
-        UnityEngine.Input.KeyCode.Spacebar,
-        UnityEngine.Input.KeyCode.F,
-        UnityEngine.Input.KeyCode.G,
-        UnityEngine.Input.KeyCode.V,
-        UnityEngine.Input.KeyCode.B,
-        UnityEngine.Input.KeyCode.R,
-        UnityEngine.Input.KeyCode.T,
-        UnityEngine.Input.KeyCode.Control,
-        UnityEngine.Input.KeyCode.Tab,
-    }
+        UnityEngine.KeyCode.Space,
+        UnityEngine.KeyCode.F,
+        UnityEngine.KeyCode.G,
+        UnityEngine.KeyCode.V,
+        UnityEngine.KeyCode.B,
+        UnityEngine.KeyCode.R,
+        UnityEngine.KeyCode.T,
+        UnityEngine.KeyCode.LeftControl,
+        UnityEngine.KeyCode.Tab,
+    };
 
-    private static UnityEngine.Input.KeyCode[] bayKeyCodes = new UnityEngine.Input.KeyCode[9]
+    private UnityEngine.KeyCode[] bayKeyCodes = new UnityEngine.KeyCode[9]
     {
-        UnityEngine.Input.KeyCode.1,
-        UnityEngine.Input.KeyCode.2,
-        UnityEngine.Input.KeyCode.3,
-        UnityEngine.Input.KeyCode.4,
-        UnityEngine.Input.KeyCode.5,
-        UnityEngine.Input.KeyCode.6,
-        UnityEngine.Input.KeyCode.7,
-        UnityEngine.Input.KeyCode.8,
-        UnityEngine.Input.KeyCode.9,
-    }
+        UnityEngine.KeyCode.Alpha1,
+        UnityEngine.KeyCode.Alpha2,
+        UnityEngine.KeyCode.Alpha3,
+        UnityEngine.KeyCode.Alpha4,
+        UnityEngine.KeyCode.Alpha5,
+        UnityEngine.KeyCode.Alpha6,
+        UnityEngine.KeyCode.Alpha7,
+        UnityEngine.KeyCode.Alpha8,
+        UnityEngine.KeyCode.Alpha9,
+    };
 
     public void AddToTeam(string buildstring)
     {
@@ -113,14 +113,6 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        buildStockpileText.text = "<color=#FFFFFF>" + GetResourceStockpile(ResourceType.Build) + "</color>";
-        moveStockpileText.text = "<color=#10FF10>" + GetResourceStockpile(ResourceType.Move) + "</color>";
-        launchStockpileText.text = "<color=#FF7F00>" + GetResourceStockpile(ResourceType.Launch) + "</color>";
-    }
-
     public List<Vessel> GetSelection()
     {
         return selection;
@@ -141,36 +133,50 @@ public class PlayerManager : MonoBehaviour
         selection.Remove(vessel);
     }
 
-    void Update ()
+    private void UpdateStockpileText()
     {
-	for (int i = 0; i < engineKeyCodes.Length; i++)
+        buildStockpileText.text = "<color=#FFFFFF>" + GetResourceStockpile(ResourceType.Build) + "</color>";
+        moveStockpileText.text = "<color=#10FF10>" + GetResourceStockpile(ResourceType.Move) + "</color>";
+        launchStockpileText.text = "<color=#FF7F00>" + GetResourceStockpile(ResourceType.Launch) + "</color>";
+    }
+
+    private void KeyboardStuff()
+    {
+        for (int i = 0; i < engineKeyCodes.Length; i++)
         {
-            UnityEngine.Input.KeyCode keyCode = engineKeyCodes[i];
+            UnityEngine.KeyCode keyCode = engineKeyCodes[i];
             if (UnityEngine.Input.GetKeyDown(keyCode))
             {
                 foreach (Vessel vessel in selection)
                 {
-                    vessel.IgniteEngines(new int[1]{i});
+                    vessel.IgniteEngines(new int[1] { i });
                 }
             }
             if (UnityEngine.Input.GetKeyUp(keyCode))
             {
                 foreach (Vessel vessel in selection)
                 {
-                    vessel.QuenchEngines(new int[1]{i});
+                    vessel.QuenchEngines(new int[1] { i });
                 }
             }
         }
-	for (int i = 0; i < launcherKeyCodes.Length; i++)
+        for (int i = 0; i < launcherKeyCodes.Length; i++)
         {
-            UnityEngine.Input.KeyCode keyCode = engineKeyCodes[i];
+            UnityEngine.KeyCode keyCode = engineKeyCodes[i];
             if (UnityEngine.Input.GetKeyDown(keyCode))
             {
                 foreach (Vessel vessel in selection)
                 {
-                    vessel.Fire(new int[1]{i});
+                    vessel.Fire(new int[1] { i });
                 }
             }
         }
+    }
+
+    void Update ()
+    {
+        UpdateStockpileText();
+
+        KeyboardStuff();
     }
 }
