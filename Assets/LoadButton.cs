@@ -12,7 +12,7 @@ public class LoadButton : MonoBehaviour
         if (SpriteManager.Instance().SpriteNameIsGood(pathOrName))
         {
             string vesselDir = System.IO.Path.Combine(UnityEngine.Application.persistentDataPath, "Vessels");
-            string buildStringPath = System.IO.Path.Combine(vesselDir, pathOrName + ".vessel");
+            string buildStringPath = SaveButton.VesselNameToPath(pathOrName);
             string spriteName = pathOrName;
             bool buildStringExists = System.IO.File.Exists(buildStringPath);
             if (buildStringExists)

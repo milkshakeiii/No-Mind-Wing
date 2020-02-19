@@ -128,6 +128,25 @@ public class TerminalInputManager : MonoBehaviour
             }
             response = "Fired " + fireCount + " launchers.";
         }
+        if (command.Equals("choose-team"))
+        {
+            for (int i = 1; i < inputWords.Length; i++)
+            {
+                response = "";
+                string name = inputWords[i];
+                string vesselPath = SaveButton.VesselNameToPath(name);
+                if (System.IO.File.Exists(vesselPath))
+                {
+                    string buildString = System.IO.File.ReadAllText(vesselPath);
+                    PlayerManager.Instance().AddToTeam(buildString);
+                    response = response + name + " added to team. ";
+                }
+                else
+                {
+                    response = response + name + " vessel could not be found. ";
+                }
+            }
+        }
         terminalLinesMaker.PushLine(response);
     }
 

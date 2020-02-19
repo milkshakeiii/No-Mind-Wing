@@ -11,8 +11,14 @@ public class PlayerManager : MonoBehaviour
     public TMPro.TextMeshProUGUI launchStockpileText;
 
     private List<Vessel> selection = new List<Vessel>();
+    private List<string> teamBuildStrings = new List<string>();
 
     private Dictionary<ResourceType, float> stockpiles = new Dictionary<ResourceType, float>();
+
+    public void AddToTeam(string buildstring)
+    {
+        teamBuildStrings.Add(buildstring);
+    }
 
     public bool AddResource(float amount, ResourceType resource)
     {

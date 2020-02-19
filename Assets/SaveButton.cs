@@ -39,11 +39,18 @@ public class SaveButton : MonoBehaviour
         {
             System.IO.Directory.CreateDirectory(vesselDir);
         }
-        string path = System.IO.Path.Combine(vesselDir, name + ".vessel");
+        string path = VesselNameToPath(name);
         if (System.IO.File.Exists(path))
         {
             System.IO.File.Delete(path);
         }
         System.IO.File.WriteAllText(path, buildstring);
+    }
+
+    public static string VesselNameToPath(string name)
+    {
+        string vesselDir = System.IO.Path.Combine(UnityEngine.Application.persistentDataPath, "Vessels");
+        string path = System.IO.Path.Combine(vesselDir, name + ".vessel");
+        return path;
     }
 }
