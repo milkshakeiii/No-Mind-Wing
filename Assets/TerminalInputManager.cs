@@ -86,7 +86,7 @@ public class TerminalInputManager : MonoBehaviour
                 spriteName = inputWords[1];
                 size = float.Parse(inputWords[2]);
                 durability = float.Parse(inputWords[3]);
-                designation = inputWords[4];
+                designation = "defaultdesignation";
             }
             response = VesselManager.Instance().BuildVessel(!dummy, sourceVessels, spriteName, size, durability, designation, parts);
         }

@@ -20,7 +20,7 @@ public class LoadButton : MonoBehaviour
                 string buildString = System.IO.File.ReadAllText(buildStringPath);
                 spriteName = buildString.Split(' ')[1];
             }
-            Sprite sprite = SpriteManager.Instance().SpriteFromName(pathOrName);
+            Sprite sprite = SpriteManager.Instance().SpriteFromName(spriteName);
             PixelGridManager.Instance().LoadTexture(sprite.texture);
             if (buildStringExists)
             {

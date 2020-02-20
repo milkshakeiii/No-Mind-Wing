@@ -102,6 +102,7 @@ public class VesselManager : MonoBehaviour
         Rigidbody2D newRigidbody = newVessel.AddComponent<UnityEngine.Rigidbody2D>();
         newRigidbody.gravityScale = 0;
         newRigidbody.useAutoMass = true;
+        newRigidbody.drag = 0.33f;
 
         //Collider2D newCollider = 
         newVessel.AddComponent<PolygonCollider2D>();

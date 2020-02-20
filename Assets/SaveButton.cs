@@ -17,7 +17,6 @@ public class SaveButton : MonoBehaviour
         buildstring += name + " ";
         buildstring += sizeSlider.value.ToString() + " ";
         buildstring += qualitySlider.value.ToString() + " ";
-        buildstring += "defaultdesignation ";
         foreach (VesselPart part in PartPlacementManager.Instance().GetListOfParts())
         {
             if (part.partType == VesselPartType.Bay)
