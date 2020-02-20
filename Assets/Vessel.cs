@@ -11,10 +11,16 @@ public class Vessel : MonoBehaviour
     private List<Engine> engines = new List<Engine>();
     private List<Bay> bays = new List<Bay>();
     private List<Launcher> launchers = new List<Launcher>();
+    private string designation = "defaultdesignation";
 
     public const float partSizeFactor = 0.5f;
     public const float damageFactor = 1f;
 
+    public string GetDesignation()
+    {
+        return designation;
+    }
+    
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Projectile" && 
@@ -104,7 +110,7 @@ public class Vessel : MonoBehaviour
         transform.localScale = new Vector3(newSize, newSize, newSize);
         hitpoints = newSize * newSize * newDurability;
         maxHitpoints = hitpoints;
-
+        designation = newDesignation;
         BuildParts(parts, newDesignation);
     }
 

@@ -27,7 +27,9 @@ public struct VesselPart
 }
 public class VesselManager : MonoBehaviour
 {
-    private Dictionary<string, List<Vessel>> vesselDict = new Dictionary<string, List<Vessel>>();
+    private Dictionary<string, List<Vessel>> vesselsByDesignation = new Dictionary<string, List<Vessel>>();
+    private Dictionary<string, Mind> mindsByDesignation = new Dictionary<string, Mind>();
+    private Queue<Vessel> vesselMindUpdateQueue = new Queue<Vessel>();
 
     private static VesselManager instance;
 
@@ -41,7 +43,7 @@ public class VesselManager : MonoBehaviour
         List<Vessel> vessels = new List<Vessel>();
         foreach (string designation in designations)
         {
-            vessels.AddRange(vesselDict[designation]);
+            vessels.AddRange(vesselsByDesignation[designation]);
         }
         return vessels;
     }
@@ -110,11 +112,12 @@ public class VesselManager : MonoBehaviour
         Vessel newVesselScript = newVessel.AddComponent<Vessel>();
         newVesselScript.Initiate(newVesselType, newSize, newDurability, newDesignation, parts);
 
-        if (!vesselDict.ContainsKey(newDesignation))
+        if (!vesselsByDesignation.ContainsKey(newDesignation))
         {
-            vesselDict[newDesignation] = new List<Vessel>();
+            vesselsByDesignation[newDesignation] = new List<Vessel>();
         }
-        vesselDict[newDesignation].Add(newVesselScript);
+        vesselsByDesignation[newDesignation].Add(newVesselScript);
+        vesselMindUpdateQueue.Enqueue(newVesselScript);
 
         if(requireSource && !PlayerManager.Instance().AddResource(-cost, ResourceType.Build))
             return "Problem: I thought there were enough resources but AddResource returned false";
@@ -136,5 +139,28 @@ public class VesselManager : MonoBehaviour
     void Update()
     {
         
+    }
+}
+
+public class Mind : Object
+{
+    private Dictionary<int, List<Behavior>> modeToPrioritizedBehaviorList = new Dictionary<int, List<Behavior>>();
+    private int currentMode = 0;
+    public void ChooseAction(Vessel actor)
+    {
+
+    }
+}
+
+public abstract class Behavior : Object
+{
+    public abstract bool ChooseActionOrPass(Vessel actor);
+}
+
+public abstract class HarvestBehavior : Behavior
+{
+    public override bool ChooseActionOrPass(Vessel actor)
+    {
+        return true;
     }
 }
