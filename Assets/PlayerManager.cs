@@ -162,7 +162,7 @@ public class PlayerManager : MonoBehaviour
         }
         for (int i = 0; i < launcherKeyCodes.Length; i++)
         {
-            UnityEngine.KeyCode keyCode = engineKeyCodes[i];
+            UnityEngine.KeyCode keyCode = launcherKeyCodes[i];
             if (UnityEngine.Input.GetKeyDown(keyCode))
             {
                 foreach (Vessel vessel in selection)

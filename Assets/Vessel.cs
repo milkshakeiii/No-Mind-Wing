@@ -73,8 +73,6 @@ public class Vessel : MonoBehaviour
                 Bay newBay = newPart.AddComponent<Bay>();
                 newBay.Initiate(part.size, part.quality1, part.quality2);
                 newPart.AddComponent<BoxCollider2D>();
-                Rigidbody2D newRigidbody = newPart.AddComponent<UnityEngine.Rigidbody2D>();
-                newRigidbody.gravityScale = 0;
                 newPart.layer = 8; //Resource
 
                 bays.Add(newBay);

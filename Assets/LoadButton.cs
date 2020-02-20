@@ -42,7 +42,7 @@ public class LoadButton : MonoBehaviour
         List<VesselPart> parts = TerminalInputManager.PartsListFromBuildString(buildString);
         foreach (VesselPart part in parts)
         {
-            PixelGridButton button = PixelGridManager.Instance().ButtonFromPosition(part.position);
+            PixelGridButton button = PixelGridManager.Instance().ButtonFromRelativePosition(part.position);
             PartPlacementManager.Instance().PlacePart(button, part);
         }
     }

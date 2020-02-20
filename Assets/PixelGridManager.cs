@@ -35,6 +35,15 @@ public class PixelGridManager : MonoBehaviour
                Vector2.one * (CurrentPixelsPerBox() / SpriteManager.SPRITE_SIZE);
     }
 
+    public Vector2 GetPixelForm(Vector2 relativeForm)
+    {
+        float xMultiplier = (relativeForm.x + 1) / 2;
+        float yMultiplier = (relativeForm.y + 1) / 2;
+        int gridI = Mathf.FloorToInt(((SpriteManager.SPRITE_SIZE) / CurrentPixelsPerBox()) * xMultiplier);
+        int gridJ = Mathf.FloorToInt(((SpriteManager.SPRITE_SIZE) / CurrentPixelsPerBox()) * yMultiplier);
+        return new Vector2(gridI, gridJ);
+    }
+
     public void SelectColor(int colorNumber)
     {
         selectedColor = colorNumber;
@@ -98,6 +107,7 @@ public class PixelGridManager : MonoBehaviour
 
     public void SpawnButtons(int buttonSize)
     {
+        colorButtons = new Dictionary<int, HashSet<UnityEngine.UI.Image>>();
         if (SpriteManager.SPRITE_SIZE % buttonSize != 0)
         {
             throw new UnityException(buttonSize.ToString() + " does not divide " + SpriteManager.SPRITE_SIZE + "!");
@@ -137,8 +147,9 @@ public class PixelGridManager : MonoBehaviour
         PartPlacementManager.Instance().ResetParts();
     }
 
-    public PixelGridButton ButtonFromPosition(Vector2 position)
+    public PixelGridButton ButtonFromRelativePosition(Vector2 position)
     {
+        position = GetPixelForm(position);
         return buttonGrid[(int)position.x, (int)position.y].gameObject.GetComponent<PixelGridButton>();
     }
 
