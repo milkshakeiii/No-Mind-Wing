@@ -39,7 +39,7 @@ public class LoadButton : MonoBehaviour
 
     public void LoadVesselParts(string buildString)
     {
-        List<VesselPart> parts = TerminalInputManager.PartsListFromBuildString(buildString);
+        List<VesselPart> parts = GameRelatedStringsManager.PartsListFromBuildString(buildString);
         foreach (VesselPart part in parts)
         {
             PixelGridButton button = PixelGridManager.Instance().ButtonFromRelativePosition(part.position);

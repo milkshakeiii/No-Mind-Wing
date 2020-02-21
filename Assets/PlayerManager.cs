@@ -10,9 +10,9 @@ public class PlayerManager : MonoBehaviour
     public TMPro.TextMeshProUGUI moveStockpileText;
     public TMPro.TextMeshProUGUI launchStockpileText;
 
-    private List<Vessel> selection = new List<Vessel>();
+    private Vessel king;
     private List<string> teamBuildStrings = new List<string>();
-
+    private Dictionary<string, List<Vessel>> vesselsByDesignation = new Dictionary<string, List<Vessel>>();
     private Dictionary<ResourceType, float> stockpiles = new Dictionary<ResourceType, float>();
 
     private UnityEngine.KeyCode[] engineKeyCodes = new UnityEngine.KeyCode[9]
@@ -86,51 +86,27 @@ public class PlayerManager : MonoBehaviour
     void Start()
     {
         instance = this;
-        StartCoroutine(Blink());
 
         stockpiles[ResourceType.Build] = 1f;
         stockpiles[ResourceType.Launch] = 1f;
         stockpiles[ResourceType.Move] = 1f;
     }
 
-    private IEnumerator Blink()
+    public void AddPlayerVessel(Vessel vessel)
     {
-        Dictionary<Vessel, Color> vesselToColor = new Dictionary<Vessel, Color>();
-        while (true)
+        if (vesselsByDesignation.ContainsKey(vessel.GetDesignation()))
         {
-            foreach (Vessel vessel in selection)
-            {
-                vesselToColor[vessel] = vessel.gameObject.GetComponent<SpriteRenderer>().color;
-                vessel.gameObject.GetComponent<SpriteRenderer>().color = Color.green;
-            }
-            yield return new WaitForSeconds(0.3f);
-            foreach (Vessel vessel in selection)
-            {
-                if (vesselToColor.ContainsKey(vessel))
-                    vessel.gameObject.GetComponent<SpriteRenderer>().color = vesselToColor[vessel];
-            }
-            yield return new WaitForSeconds(1.7f);
+            vesselsByDesignation[vessel.GetDesignation()].Add(vessel);
+        }
+        else
+        {
+            vesselsByDesignation[vessel.GetDesignation()] = new List<Vessel>() {vessel};
         }
     }
 
-    public List<Vessel> GetSelection()
+    public void VesselDestroyed(Vessel vessel)
     {
-        return selection;
-    }
-
-    public void Select(List<string> designations)
-    {
-        selection = VesselManager.Instance().GetVesselsByDesignation(designations);
-    }
-
-    public void AddToSelection(List<string> designations)
-    {
-        selection.AddRange(VesselManager.Instance().GetVesselsByDesignation(designations));
-    }
-
-    public void RemoveFromSelection(Vessel vessel)
-    {
-        selection.Remove(vessel);
+        vesselsByDesignation[vessel.GetDesignation()].Remove(vessel);
     }
 
     private void UpdateStockpileText()
@@ -142,22 +118,19 @@ public class PlayerManager : MonoBehaviour
 
     private void KeyboardStuff()
     {
+        if (king == null)
+            return;
+
         for (int i = 0; i < engineKeyCodes.Length; i++)
         {
             UnityEngine.KeyCode keyCode = engineKeyCodes[i];
             if (UnityEngine.Input.GetKeyDown(keyCode))
             {
-                foreach (Vessel vessel in selection)
-                {
-                    vessel.IgniteEngines(new int[1] { i });
-                }
+                king.IgniteEngines(new int[1] { i });
             }
             if (UnityEngine.Input.GetKeyUp(keyCode))
             {
-                foreach (Vessel vessel in selection)
-                {
-                    vessel.QuenchEngines(new int[1] { i });
-                }
+                king.QuenchEngines(new int[1] { i });
             }
         }
         for (int i = 0; i < launcherKeyCodes.Length; i++)
@@ -165,10 +138,7 @@ public class PlayerManager : MonoBehaviour
             UnityEngine.KeyCode keyCode = launcherKeyCodes[i];
             if (UnityEngine.Input.GetKeyDown(keyCode))
             {
-                foreach (Vessel vessel in selection)
-                {
-                    vessel.Fire(new int[1] { i });
-                }
+                king.Fire(new int[1] { i });
             }
         }
     }

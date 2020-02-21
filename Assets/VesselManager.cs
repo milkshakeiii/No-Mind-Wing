@@ -27,7 +27,6 @@ public struct VesselPart
 }
 public class VesselManager : MonoBehaviour
 {
-    private Dictionary<string, List<Vessel>> vesselsByDesignation = new Dictionary<string, List<Vessel>>();
     private Dictionary<string, Mind> mindsByDesignation = new Dictionary<string, Mind>();
     private Queue<Vessel> vesselMindUpdateQueue = new Queue<Vessel>();
 
@@ -38,16 +37,6 @@ public class VesselManager : MonoBehaviour
     public static VesselManager Instance()
     {
         return instance;
-    }
-
-    public List<Vessel> GetVesselsByDesignation(List<string> designations)
-    {
-        List<Vessel> vessels = new List<Vessel>();
-        foreach (string designation in designations)
-        {
-            vessels.AddRange(vesselsByDesignation[designation]);
-        }
-        return vessels;
     }
 
     public string BuildVessel(bool requireSource,
@@ -114,11 +103,7 @@ public class VesselManager : MonoBehaviour
         Vessel newVesselScript = newVessel.AddComponent<Vessel>();
         newVesselScript.Initiate(newVesselType, newSize, newDurability, newDesignation, parts);
 
-        if (!vesselsByDesignation.ContainsKey(newDesignation))
-        {
-            vesselsByDesignation[newDesignation] = new List<Vessel>();
-        }
-        vesselsByDesignation[newDesignation].Add(newVesselScript);
+        PlayerManager.Instance().AddPlayerVessel(newVesselScript);
         vesselMindUpdateQueue.Enqueue(newVesselScript);
 
         if(requireSource && !PlayerManager.Instance().AddResource(-cost, ResourceType.Build))
@@ -163,7 +148,13 @@ public class Mind : Object
     private int currentMode = 0;
     public void ChooseAction(Vessel actor)
     {
-
+        foreach (Behavior behavior in modeToPrioritizedBehaviorList[currentMode])
+        {
+            if (behavior.ChooseActionOrPass(actor))
+            {
+                return; //we chose an action
+            }
+        }
     }
 }
 

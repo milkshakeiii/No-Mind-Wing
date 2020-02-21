@@ -156,6 +156,6 @@ public class Vessel : MonoBehaviour
             ProjectileManager.Instance().Explode(launcher);
         }
 
-        PlayerManager.Instance().RemoveFromSelection(this);
+        PlayerManager.Instance().VesselDestroyed(this);
     }
 }
