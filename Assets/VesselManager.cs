@@ -39,7 +39,7 @@ public class VesselManager : MonoBehaviour
         return instance;
     }
 
-    public string BuildVessel(bool requireSource,
+    public Vessel BuildVessel(bool requireSource,
                               List<Vessel> sourceVessels,
                               string spriteName,
                               float newSize,
@@ -49,7 +49,7 @@ public class VesselManager : MonoBehaviour
     {
         if (requireSource && sourceVessels.Count == 0)
         {
-            return "No vessels selected";
+            throw new UnityException("Tried to build from source vessel with no source vessels");
         }
         Vector2 buildLocation = Vector2.zero;
         bool locationFound = false;
@@ -70,12 +70,13 @@ public class VesselManager : MonoBehaviour
         }
         if (!locationFound)
         {
-            return "No selected vessel has a large enough bay";
+            //"No selected vessel has a large enough bay";
+            return null;
         }
 
         if (!SpriteManager.Instance().SpriteNameIsGood(spriteName))
         {
-            return "No sprite was found with name: " + spriteName;
+            throw new UnityException("Tried to build vessel with invalid sprite name: " + spriteName);
         }
 
         VesselType newVesselType = SpriteManager.Instance().VesselTypeFromName(spriteName);
@@ -83,7 +84,8 @@ public class VesselManager : MonoBehaviour
         float stockpile = PlayerManager.Instance().GetResourceStockpile(ResourceType.Build);
         if (requireSource && (cost > stockpile))
         {
-            return cost.ToString() + " is required but only " + stockpile.ToString() + " is stockpiled.";
+            // cost.ToString() + " is required but only " + stockpile.ToString() + " is stockpiled.";
+            return null;
         }
 
         GameObject newVessel = new GameObject(newDesignation);
@@ -107,8 +109,8 @@ public class VesselManager : MonoBehaviour
         vesselMindUpdateQueue.Enqueue(newVesselScript);
 
         if(requireSource && !PlayerManager.Instance().AddResource(-cost, ResourceType.Build))
-            return "Problem: I thought there were enough resources but AddResource returned false";
-        return "Built vessel, designation: " + newDesignation;
+            throw new UnityException ("Problem: I thought there were enough resources but AddResource returned false");
+        return newVesselScript;
     }
 
     private float VesselCost(VesselType type, float size, float durability, List<VesselPart> parts)

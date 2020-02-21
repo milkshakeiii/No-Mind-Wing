@@ -54,6 +54,11 @@ public class PlayerManager : MonoBehaviour
         UnityEngine.KeyCode.Alpha9,
     };
 
+    public void SpawnKing(string spriteName, List<VesselPart> parts)
+    {
+        VesselManager.Instance().BuildVessel(false, new List<Vessel>(), spriteName, 1f, 1f, "king", parts);
+    }
+
     public void AddToTeam(string buildstring)
     {
         teamBuildStrings.Add(buildstring);

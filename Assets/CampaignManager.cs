@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class CampaignManager : MonoBehaviour
 {
+
     // Start is called before the first frame update
-    void Start()
+    IEnumerator Start()
     {
-        
+        yield return null;
+        PlayerManager.Instance().SpawnKing();
     }
 
     // Update is called once per frame
