@@ -34,7 +34,7 @@ public class SaveButton : MonoBehaviour
             buildstring += part.facing.ToString() + " ";
         }
 
-        string vesselDir = System.IO.Path.Combine(UnityEngine.Application.persistentDataPath, "Vessels");
+        string vesselDir = VesselDirectory();
         if (!System.IO.Directory.Exists(vesselDir))
         {
             System.IO.Directory.CreateDirectory(vesselDir);
@@ -49,8 +49,27 @@ public class SaveButton : MonoBehaviour
 
     public static string VesselNameToPath(string name)
     {
-        string vesselDir = System.IO.Path.Combine(UnityEngine.Application.persistentDataPath, "Vessels");
+        string vesselDir = VesselDirectory();
         string path = System.IO.Path.Combine(vesselDir, name + ".vessel");
         return path;
+    }
+
+    private static string VesselDirectory()
+    {
+        return System.IO.Path.Combine(UnityEngine.Application.persistentDataPath, "Vessels");
+    }
+
+    public static Dictionary<string, string> AllSavedNamesToBuildstrings()
+    {
+        Dictionary<string, string> returnDict = new Dictionary<string, string>();
+        foreach (string path in System.IO.Directory.EnumerateFiles(VesselDirectory()))
+        {
+            if (System.IO.Path.GetExtension(path) == ".vessel")
+            {
+                returnDict[System.IO.Path.GetFileNameWithoutExtension(path)] =
+                    System.IO.File.ReadAllText(path);
+            }
+        }
+        return returnDict;
     }
 }

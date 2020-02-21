@@ -31,6 +31,8 @@ public class VesselManager : MonoBehaviour
     private Dictionary<string, Mind> mindsByDesignation = new Dictionary<string, Mind>();
     private Queue<Vessel> vesselMindUpdateQueue = new Queue<Vessel>();
 
+    private Dictionary<string, string> namesToBuildstrings = new Dictionary<string, string>();
+
     private static VesselManager instance;
 
     public static VesselManager Instance()
@@ -133,6 +135,8 @@ public class VesselManager : MonoBehaviour
     void Start()
     {
         instance = this;
+
+        namesToBuildstrings = SaveButton.AllSavedNamesToBuildstrings();
     }
 
     // Update is called once per frame
