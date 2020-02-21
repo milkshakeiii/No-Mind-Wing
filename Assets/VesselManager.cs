@@ -138,7 +138,18 @@ public class VesselManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        int vesselUpdatesThisFrame = Mathf.Min
+        (
+            Mathf.CeilToInt(vesselMindUpdateQueue.Count * Time.deltaTime),
+            20
+        );
+        for (int i = 0; i < vesselUpdatesThisFrame; i++)
+        {
+            Vessel updateMe = vesselMindUpdateQueue.Dequeue();
+            Mind mind = mindsByDesignation[updateMe.GetDesignation()];
+            mind.ChooseAction(updateMe);
+            vesselMindUpdateQueue.Enqueue(updateMe);
+        }
     }
 }
 
