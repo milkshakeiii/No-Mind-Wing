@@ -11,7 +11,7 @@ public class PixelGridManager : MonoBehaviour
         placePart = 2,
         deletePart = 3
     }
-    private ToolType currentTool = ToolType.noTool;
+    private ToolType currentTool = ToolType.paint;
 
     private int sizeFactor;
 
@@ -83,6 +83,9 @@ public class PixelGridManager : MonoBehaviour
         SetPixelSize();
 
         SpawnButtons(10);
+
+        colorsByNumber[0] = Color.white;
+        colorsByNumber[1] = Color.black;
     }
 
     private void SetPixelSize()
@@ -141,10 +144,16 @@ public class PixelGridManager : MonoBehaviour
                 PixelGridButton buttonScript = buttonObject.AddComponent<PixelGridButton>();
                 buttonScript.Initialize(new Vector2(i, j));
                 buttonComponent.onClick.AddListener(buttonScript.OnClicked);
+                UnityEngine.EventSystems.EventTrigger eventTrigger = buttonObject.AddComponent<UnityEngine.EventSystems.EventTrigger>();
+                UnityEngine.EventSystems.EventTrigger.Entry entry = new UnityEngine.EventSystems.EventTrigger.Entry();
+                entry.eventID = UnityEngine.EventSystems.EventTriggerType.PointerEnter;
+                entry.callback.AddListener((eventData) => { buttonScript.MouseEnter(); });
+                eventTrigger.triggers.Add(entry);
                 buttonGrid[i, j] = buttonComponent;
             }
         }
-        PartPlacementManager.Instance().ResetParts();
+        if (PartPlacementManager.Instance() != null)
+            PartPlacementManager.Instance().ResetParts();
     }
 
     public PixelGridButton ButtonFromRelativePosition(Vector2 position)

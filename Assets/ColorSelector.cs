@@ -17,4 +17,9 @@ public class ColorSelector : MonoBehaviour
     {
         PixelGridManager.Instance().SetColor(colorNumber, gameObject.GetComponent<UnityEngine.UI.Image>().color);
     }
+
+    private void Start()
+    {
+        
+    }
 }

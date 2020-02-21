@@ -21,4 +21,12 @@ public class PixelGridButton : MonoBehaviour
         Debug.Log(gameObject);
         PixelGridManager.Instance().ButtonClicked(this);
     }
+
+    public void MouseEnter()
+    {
+        if (Input.GetMouseButton(0))
+        {
+            PixelGridManager.Instance().ButtonClicked(this);
+        }
+    }
 }
