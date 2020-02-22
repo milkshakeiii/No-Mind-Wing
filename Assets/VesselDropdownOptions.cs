@@ -8,7 +8,7 @@ public class VesselDropdownOptions : MonoBehaviour
 
     void Start()
     {
-        Dictionary<string, string> namesToBuildstrings = SaveButton.AllSavedNamesToBuildstrings();
+        Dictionary<string, string> namesToBuildstrings = GameStringsHelper.AllSavedNamesToBuildstrings();
         dropdown.AddOptions(new List<string>(namesToBuildstrings.Keys));
     }
 

@@ -9,7 +9,13 @@ public class CampaignManager : MonoBehaviour
     IEnumerator Start()
     {
         yield return null;
-        PlayerManager.Instance().SpawnKing();
+        string kingSpriteName = PlayerPrefs.GetString("king sprite name");
+        PlayerManager.Instance().SpawnKing(kingSpriteName);
+    }
+
+    public static void Being()
+    {
+        
     }
 
     // Update is called once per frame

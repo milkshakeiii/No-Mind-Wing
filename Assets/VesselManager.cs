@@ -30,13 +30,21 @@ public class VesselManager : MonoBehaviour
     private Dictionary<string, Mind> mindsByDesignation = new Dictionary<string, Mind>();
     private Queue<Vessel> vesselMindUpdateQueue = new Queue<Vessel>();
 
-    private Dictionary<string, string> namesToBuildstrings = new Dictionary<string, string>();
+    private Dictionary<string, string> vesselNamesToBuildstrings = new Dictionary<string, string>();
 
     private static VesselManager instance;
 
     public static VesselManager Instance()
     {
         return instance;
+    }
+
+    public Vessel BuildVessel(bool requireSource,
+                              List<Vessel> sourceVessels,
+                              string vesselName)
+    {
+        string buildString = vesselNamesToBuildstrings[vesselName];
+        return GameStringsHelper.PerformBuildFromString(requireSource, buildString, vesselName, sourceVessels);
     }
 
     public Vessel BuildVessel(bool requireSource,
@@ -123,7 +131,7 @@ public class VesselManager : MonoBehaviour
     {
         instance = this;
 
-        namesToBuildstrings = SaveButton.AllSavedNamesToBuildstrings();
+        vesselNamesToBuildstrings = GameStringsHelper.AllSavedNamesToBuildstrings();
     }
 
     // Update is called once per frame

@@ -12,7 +12,7 @@ public class LoadButton : MonoBehaviour
         if (SpriteManager.Instance().SpriteNameIsGood(pathOrName))
         {
             string vesselDir = System.IO.Path.Combine(UnityEngine.Application.persistentDataPath, "Vessels");
-            string buildStringPath = SaveButton.VesselNameToPath(pathOrName);
+            string buildStringPath = GameStringsHelper.VesselNameToPath(pathOrName);
             string spriteName = pathOrName;
             bool buildStringExists = System.IO.File.Exists(buildStringPath);
             if (buildStringExists)
@@ -39,7 +39,7 @@ public class LoadButton : MonoBehaviour
 
     public void LoadVesselParts(string buildString)
     {
-        List<VesselPart> parts = GameRelatedStringsManager.PartsListFromBuildString(buildString);
+        List<VesselPart> parts = GameStringsHelper.PartsListFromBuildString(buildString);
         foreach (VesselPart part in parts)
         {
             PixelGridButton button = PixelGridManager.Instance().ButtonFromRelativePosition(part.position);

@@ -59,6 +59,11 @@ public class PlayerManager : MonoBehaviour
         VesselManager.Instance().BuildVessel(false, new List<Vessel>(), spriteName, 1f, 1f, "king", parts);
     }
 
+    public void SpawnKing(string vesselName)
+    {
+        VesselManager.Instance().BuildVessel(false, new List<Vessel>(), vesselName);
+    }
+
     public void AddToTeam(string buildstring)
     {
         teamBuildStrings.Add(buildstring);

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class GameRelatedStringsManager
+public static class GameStringsHelper
 {
-    private static string PerformBuildFromString(bool requireSource, string buildString, string designation, List<Vessel> sourceVessels)
+    public static Vessel PerformBuildFromString(bool requireSource, string buildString, string designation, List<Vessel> sourceVessels)
     {
         string[] inputWords = buildString.Split(' ');
         List<VesselPart> parts = PartsListFromBuildString(buildString);
@@ -12,8 +12,7 @@ public static class GameRelatedStringsManager
         float size = float.Parse(inputWords[2]);
         float durability = float.Parse(inputWords[3]);
 
-        string response = VesselManager.Instance().BuildVessel(requireSource, sourceVessels, spriteName, size, durability, designation, parts);
-        return response;
+        return VesselManager.Instance().BuildVessel(requireSource, sourceVessels, spriteName, size, durability, designation, parts);
     }
 
     public static List<VesselPart> PartsListFromBuildString(string buildstring)
@@ -72,5 +71,31 @@ public static class GameRelatedStringsManager
         System.IO.File.Copy(path, destinationFilePath);
         SpriteManager.Instance().LoadSprites();
         return "Hull loaded. Name: " + fileName;
+    }
+
+    public static Dictionary<string, string> AllSavedNamesToBuildstrings()
+    {
+        Dictionary<string, string> returnDict = new Dictionary<string, string>();
+        foreach (string path in System.IO.Directory.EnumerateFiles(VesselDirectory()))
+        {
+            if (System.IO.Path.GetExtension(path) == ".vessel")
+            {
+                returnDict[System.IO.Path.GetFileNameWithoutExtension(path)] =
+                    System.IO.File.ReadAllText(path);
+            }
+        }
+        return returnDict;
+    }
+
+    public static string VesselNameToPath(string name)
+    {
+        string vesselDir = VesselDirectory();
+        string path = System.IO.Path.Combine(vesselDir, name + ".vessel");
+        return path;
+    }
+
+    public static string VesselDirectory()
+    {
+        return System.IO.Path.Combine(UnityEngine.Application.persistentDataPath, "Vessels");
     }
 }
