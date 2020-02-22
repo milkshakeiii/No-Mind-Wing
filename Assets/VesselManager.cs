@@ -41,10 +41,11 @@ public class VesselManager : MonoBehaviour
 
     public Vessel BuildVessel(bool requireSource,
                               List<Vessel> sourceVessels,
-                              string vesselName)
+                              string vesselName,
+                              string designation)
     {
         string buildString = vesselNamesToBuildstrings[vesselName];
-        return GameStringsHelper.PerformBuildFromString(requireSource, buildString, vesselName, sourceVessels);
+        return GameStringsHelper.PerformBuildFromString(requireSource, buildString, designation, sourceVessels);
     }
 
     public Vessel BuildVessel(bool requireSource,
@@ -132,6 +133,7 @@ public class VesselManager : MonoBehaviour
         instance = this;
 
         vesselNamesToBuildstrings = GameStringsHelper.AllSavedNamesToBuildstrings();
+        mindsByDesignation["king"] = new Mind();
     }
 
     // Update is called once per frame
@@ -154,7 +156,12 @@ public class VesselManager : MonoBehaviour
 
 public class Mind : Object
 {
-    private Dictionary<int, List<Behavior>> modeToPrioritizedBehaviorList = new Dictionary<int, List<Behavior>>();
+    private Dictionary<int, List<Behavior>> modeToPrioritizedBehaviorList = new Dictionary<int, List<Behavior>>()
+    {
+        { 0, new List<Behavior>() },
+        { 1, new List<Behavior>() },
+        { 2, new List<Behavior>() },
+    };
     private int currentMode = 0;
     public void ChooseAction(Vessel actor)
     {

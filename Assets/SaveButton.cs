@@ -46,4 +46,14 @@ public class SaveButton : MonoBehaviour
         }
         System.IO.File.WriteAllText(path, buildstring);
     }
+
+    public void SetKingSpriteName()
+    {
+        PlayerPrefs.SetString("king sprite name", input.text);
+    }
+
+    public void BeginCampaign()
+    {
+        CampaignManager.Begin();
+    }
 }

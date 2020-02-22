@@ -13,9 +13,9 @@ public class CampaignManager : MonoBehaviour
         PlayerManager.Instance().SpawnKing(kingSpriteName);
     }
 
-    public static void Being()
+    public static void Begin()
     {
-        
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Game");
     }
 
     // Update is called once per frame

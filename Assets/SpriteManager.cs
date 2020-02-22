@@ -104,7 +104,7 @@ public class SpriteManager : MonoBehaviour
             vesselType = VesselType.Square
         };
         vesselSprites[fileName] = newVesselSprite;
-        Debug.Log("Loaded sprite: " + fileName.ToString());
+        //Debug.Log("Loaded sprite: " + fileName.ToString());
 
         return fileName;
     }
