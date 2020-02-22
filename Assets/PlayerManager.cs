@@ -11,7 +11,7 @@ public class PlayerManager : MonoBehaviour
     public TMPro.TextMeshProUGUI launchStockpileText;
 
     private Vessel king;
-    private List<string> teamBuildStrings = new List<string>();
+    private List<string> teamNames = new List<string>();
     private Dictionary<string, List<Vessel>> vesselsByDesignation = new Dictionary<string, List<Vessel>>();
     private Dictionary<ResourceType, float> stockpiles = new Dictionary<ResourceType, float>();
 
@@ -64,9 +64,9 @@ public class PlayerManager : MonoBehaviour
         king = VesselManager.Instance().BuildVessel(false, new List<Vessel>(), vesselName, "king");
     }
 
-    public void AddToTeam(string buildstring)
+    public void AddToTeam(string vesselName)
     {
-        teamBuildStrings.Add(buildstring);
+        teamNames.Add(vesselName);
     }
 
     public bool AddResource(float amount, ResourceType resource)
@@ -149,6 +149,17 @@ public class PlayerManager : MonoBehaviour
             if (UnityEngine.Input.GetKeyDown(keyCode))
             {
                 king.Fire(new int[1] { i });
+            }
+        }
+        for (int i = 0; i < teamNames.Count; i++)
+        {
+            UnityEngine.KeyCode keyCode = bayKeyCodes[i];
+            if (UnityEngine.Input.GetKeyDown(keyCode))
+            {
+                VesselManager.Instance().BuildVessel(true,
+                                                     new List<Vessel>() { king },
+                                                     teamNames[i],
+                                                     teamNames[i]);
             }
         }
     }

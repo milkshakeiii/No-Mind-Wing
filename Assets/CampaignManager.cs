@@ -11,6 +11,13 @@ public class CampaignManager : MonoBehaviour
         yield return null;
         string kingSpriteName = PlayerPrefs.GetString("king sprite name");
         PlayerManager.Instance().SpawnKing(kingSpriteName);
+        SpawnEnemies();
+    }
+
+    public void SpawnEnemies()
+    {
+        Vessel enemy = VesselManager.Instance().BuildVessel(false, new List<Vessel>(), "pewpew", "enemy1");
+        enemy.transform.position = new Vector2(2, 2);
     }
 
     public static void Begin()

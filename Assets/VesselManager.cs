@@ -106,7 +106,8 @@ public class VesselManager : MonoBehaviour
         Rigidbody2D newRigidbody = newVessel.AddComponent<UnityEngine.Rigidbody2D>();
         newRigidbody.gravityScale = 0;
         newRigidbody.useAutoMass = true;
-        newRigidbody.drag = 0.33f;
+        newRigidbody.drag = 1f;
+        newRigidbody.angularDrag = 1f;
 
         //Collider2D newCollider = 
         newVessel.AddComponent<PolygonCollider2D>();
@@ -134,6 +135,7 @@ public class VesselManager : MonoBehaviour
 
         vesselNamesToBuildstrings = GameStringsHelper.AllSavedNamesToBuildstrings();
         mindsByDesignation["king"] = new Mind();
+        mindsByDesignation["enemy1"] = new Mind();
     }
 
     // Update is called once per frame
