@@ -9,14 +9,14 @@ public class CampaignManager : MonoBehaviour
     IEnumerator Start()
     {
         yield return null;
-        string kingSpriteName = PlayerPrefs.GetString("king sprite name");
+        string kingSpriteName = PlayerPrefs.GetString("king vessel name");
         PlayerManager.Instance().SpawnKing(kingSpriteName);
         SpawnEnemies();
     }
 
     public void SpawnEnemies()
     {
-        Vessel enemy = VesselManager.Instance().BuildVessel(false, new List<Vessel>(), "pewpew", "enemy1");
+        Vessel enemy = VesselManager.Instance().BuildVessel(false, new List<Vessel>(), "enemy_vessel_name_0", "enemy1");
         enemy.transform.position = new Vector2(2, 2);
     }
 

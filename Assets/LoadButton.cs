@@ -5,10 +5,26 @@ using UnityEngine;
 public class LoadButton : MonoBehaviour
 {
     public TMPro.TMP_InputField input;
+    public TMPro.TMP_InputField saveInput;
+    public bool loadKingOnStart = false;
+
+    private void Start()
+    {
+        if (loadKingOnStart && PlayerPrefs.HasKey("king vessel name"))
+        {
+            string kingVesselName = PlayerPrefs.GetString("king vessel name");
+            LoadByPathOrName(kingVesselName);
+            saveInput.text = kingVesselName;
+        }
+    }
 
     public void Load()
     {
-        string pathOrName = input.text;
+        LoadByPathOrName(input.text);
+    }
+
+    public void LoadByPathOrName(string pathOrName)
+    {
         if (SpriteManager.Instance().SpriteNameIsGood(pathOrName))
         {
             string vesselDir = System.IO.Path.Combine(UnityEngine.Application.persistentDataPath, "Vessels");

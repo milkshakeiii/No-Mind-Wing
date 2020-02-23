@@ -4,6 +4,14 @@ using UnityEngine;
 
 public static class GameStringsHelper
 {
+    public static List<string> enemyBuildstrings = new List<string>()
+    {
+        "build triangle 0.5 0.5 " +
+        "-launcher 0.5 1 1 0.5238096 0.6190476 0 " +
+        "-engine 0.5 1 1 -0.04761904 -0.6190476 0 " +
+        "-engine 0.5 1 1 -0.6190476 -0.04761904 268.7669",
+    };
+
     public static Vessel PerformBuildFromString(bool requireSource, string buildString, string designation, List<Vessel> sourceVessels)
     {
         string[] inputWords = buildString.Split(' ');
@@ -73,6 +81,11 @@ public static class GameStringsHelper
         return "Hull loaded. Name: " + fileName;
     }
 
+    //remember, sprite name -> .vessel name -> designation
+    //designations hold onto to vessels, but two vessels from the same .vessel
+    //could have two different designations
+    //.vessel names point to .vessel files which have a sprite, but two different
+    //.vessel files could have the same sprite
     public static Dictionary<string, string> AllSavedNamesToBuildstrings()
     {
         Dictionary<string, string> returnDict = new Dictionary<string, string>();
@@ -83,6 +96,12 @@ public static class GameStringsHelper
                 returnDict[System.IO.Path.GetFileNameWithoutExtension(path)] =
                     System.IO.File.ReadAllText(path);
             }
+        }
+        for (int i = 0; i < enemyBuildstrings.Count; i++)
+        {
+            string buildstring = enemyBuildstrings[i];
+            string key = "enemy_vessel_name_" + i.ToString();
+            returnDict[key] = buildstring;
         }
         return returnDict;
     }

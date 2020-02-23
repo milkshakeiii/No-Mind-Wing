@@ -18,7 +18,6 @@ public class PixelGridButton : MonoBehaviour
 
     public void OnClicked()
     {
-        Debug.Log(gameObject);
         PixelGridManager.Instance().ButtonClicked(this);
     }
 

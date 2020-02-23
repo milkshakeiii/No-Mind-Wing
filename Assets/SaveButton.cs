@@ -49,7 +49,7 @@ public class SaveButton : MonoBehaviour
 
     public void SetKingSpriteName()
     {
-        PlayerPrefs.SetString("king sprite name", input.text);
+        PlayerPrefs.SetString("king vessel name", input.text);
     }
 
     public void BeginCampaign()

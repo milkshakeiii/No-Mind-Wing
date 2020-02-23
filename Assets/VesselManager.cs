@@ -44,6 +44,7 @@ public class VesselManager : MonoBehaviour
                               string vesselName,
                               string designation)
     {
+        Debug.Log("build vessel: " + vesselName);
         string buildString = vesselNamesToBuildstrings[vesselName];
         return GameStringsHelper.PerformBuildFromString(requireSource, buildString, designation, sourceVessels);
     }
