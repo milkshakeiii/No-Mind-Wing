@@ -117,6 +117,8 @@ public class VesselManager : MonoBehaviour
 
         PlayerManager.Instance().AddPlayerVessel(newVesselScript);
         vesselMindUpdateQueue.Enqueue(newVesselScript);
+        if (!mindsByDesignation.ContainsKey(newDesignation))
+            mindsByDesignation[newDesignation] = new Mind();
 
         if(requireSource && !PlayerManager.Instance().AddResource(-cost, ResourceType.Build))
             throw new UnityException ("Problem: I thought there were enough resources but AddResource returned false");
@@ -134,8 +136,11 @@ public class VesselManager : MonoBehaviour
         instance = this;
 
         vesselNamesToBuildstrings = GameStringsHelper.AllSavedNamesToBuildstrings();
-        mindsByDesignation["king"] = new Mind();
-        mindsByDesignation["enemy1"] = new Mind();
+    }
+
+    public Mind GetMind(string designation)
+    {
+        return mindsByDesignation[designation];
     }
 
     // Update is called once per frame
