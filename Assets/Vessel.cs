@@ -20,6 +20,21 @@ public class Vessel : MonoBehaviour
     {
         return designation;
     }
+
+    public List<Launcher> GetLaunchers()
+    {
+        return launchers;
+    }
+
+    public float GetRange()
+    {
+        float range = 0;
+        foreach (Launcher launcher in launchers)
+        {
+            range = Mathf.Max(range, launcher.LaunchRange());
+        }
+        return range;
+    }
     
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -124,6 +139,11 @@ public class Vessel : MonoBehaviour
     {
         foreach (int index in indexes)
             engines[index].TurnOff();
+    }
+
+    public int Fire(int index)
+    {
+        return Fire(new int[1] { index });
     }
 
     public int Fire(int[] indexes)

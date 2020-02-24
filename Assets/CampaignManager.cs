@@ -16,7 +16,11 @@ public class CampaignManager : MonoBehaviour
 
     public void SpawnEnemies()
     {
-        Vessel enemy = VesselManager.Instance().BuildVessel(false, new List<Vessel>(), "enemy_vessel_name_0", "enemy1");
+        Vessel enemy = VesselManager.Instance().BuildVessel(false,
+                                                            new List<Vessel>(),
+                                                            "enemy_vessel_name_0",
+                                                            "enemy1");
+        VesselManager.Instance().GetMind("enemy1").AddBehavior(0, new AttackPlayerKingBehavior());
         enemy.transform.position = new Vector2(2, 2);
     }
 

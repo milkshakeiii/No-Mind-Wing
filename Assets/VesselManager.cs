@@ -181,11 +181,25 @@ public class Mind : Object
             }
         }
     }
+
+    public void SetMode(int newMode)
+    {
+        if (!modeToPrioritizedBehaviorList.ContainsKey(newMode))
+        {
+            throw new UnityException("Invalid mind mode: " + newMode.ToString());
+        }
+        currentMode = newMode;
+    }
+
+    public void AddBehavior(int mode, Behavior behavior)
+    {
+        modeToPrioritizedBehaviorList[mode].Add(behavior);
+    }
 }
 
 public abstract class Behavior : Object
 {
-    public abstract bool ChooseActionOrPass(Vessel actor);
+    public abstract bool ChooseActionOrPass(Vessel actor); //true to choose, false to pass
 }
 
 public abstract class HarvestBehavior : Behavior
@@ -193,5 +207,48 @@ public abstract class HarvestBehavior : Behavior
     public override bool ChooseActionOrPass(Vessel actor)
     {
         return true;
+    }
+}
+
+public abstract class AttackBehavior : Behavior
+{
+    public const float shootAccuracyTolerance = 10f;
+
+    public override bool ChooseActionOrPass(Vessel actor)
+    {
+        Vector2 positionToAttack = ChoosePositionToAttack(actor);
+
+        List<Launcher> launchers = actor.GetLaunchers();
+        for (int i = 0; i < launchers.Count; i++)
+        {
+            Launcher launcher = launchers[i];
+            Vector2 launcherPosition = launcher.transform.position;
+            Vector2 differenceVectorToTarget = (positionToAttack - launcherPosition);
+            if (differenceVectorToTarget.magnitude > launcher.LaunchRange())
+            {
+                continue;
+            }
+
+            float facingToTarget = Mathf.Acos(differenceVectorToTarget.y / differenceVectorToTarget.x) *
+                                   Mathf.Rad2Deg;
+            float myFacing = launcher.transform.eulerAngles.z;
+            float offBy = Mathf.Abs(facingToTarget - myFacing);
+            if (offBy < shootAccuracyTolerance)
+            {
+                actor.Fire(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public abstract Vector2 ChoosePositionToAttack(Vessel actor);
+}
+
+public class AttackPlayerKingBehavior : AttackBehavior
+{
+    public override Vector2 ChoosePositionToAttack(Vessel actor)
+    {
+        return PlayerManager.Instance().GetKing().transform.position;
     }
 }
