@@ -199,12 +199,12 @@ public class Mind : Object
 
 public abstract class Behavior : Object
 {
-    public abstract bool ChooseActionOrPass(Vessel actor); //true to choose, false to pass
+    public abstract bool ChooseActionOrPass(Vessel actor, float argument); //true to choose, false to pass
 }
 
 public abstract class HarvestBehavior : Behavior
 {
-    public override bool ChooseActionOrPass(Vessel actor)
+    public override bool ChooseActionOrPass(Vessel actor, float argument)
     {
         return true;
     }
@@ -214,7 +214,7 @@ public abstract class AttackBehavior : Behavior
 {
     public const float shootAccuracyTolerance = 10f;
 
-    public override bool ChooseActionOrPass(Vessel actor)
+    public override bool ChooseActionOrPass(Vessel actor, float argument)
     {
         Vector2 positionToAttack = ChoosePositionToAttack(actor);
 
@@ -243,6 +243,25 @@ public abstract class AttackBehavior : Behavior
     }
 
     public abstract Vector2 ChoosePositionToAttack(Vessel actor);
+}
+
+public abstract class MoveBehavior: Behavior
+{
+    public override bool ChooseActionOrPass(Vessel actor, float argument)
+    {
+        return false;
+    }
+
+    public abstract Vector2 ChoosePositionToMoveTo(Vessel actor);
+}
+
+public class MoveTowardPlayerKingBehavior : MoveBehavior
+{
+
+    public override Vector2 ChoosePositionToMoveTo(Vessel actor)
+    {
+        return PlayerManager.Instance().GetKing().transform.position;
+    }
 }
 
 public class AttackPlayerKingBehavior : AttackBehavior
