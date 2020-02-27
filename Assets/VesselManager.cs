@@ -201,7 +201,7 @@ public abstract class Behavior : Object
 {
     private float argument;
 
-    void Behavior(float newArgument)
+    public Behavior(float newArgument)
     {
         argument = newArgument;
     }
