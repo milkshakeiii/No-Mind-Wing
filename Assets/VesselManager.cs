@@ -201,9 +201,14 @@ public abstract class Behavior : Object
 {
     private float argument;
 
-    public Behavior(float newArgument)
+    public void SetArgument(float newArgument)
     {
         argument = newArgument;
+    }
+
+    private float GetArgument()
+    {
+        return argument;
     }
 
     public abstract bool ChooseActionOrPass(Vessel actor); //true to choose, false to pass
@@ -256,7 +261,6 @@ public abstract class MoveBehavior : Behavior
 {
     public override bool ChooseActionOrPass(Vessel actor)
     {
-        //implement this
         return false;
     }
 
