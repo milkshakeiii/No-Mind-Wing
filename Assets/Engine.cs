@@ -16,9 +16,14 @@ public class Engine : MonoBehaviour
     private const float maxSpeedFactor = 10f;
     private const float absoluteMaxAngularVelocity = 1080f; //degrees per second
 
-    private float GetMaxThrust()
+    public float GetMaxThrust()
     {
         return gameObject.transform.localScale.x * maxThrustFactor;
+    }
+
+    public float GetThrustWarmupPerSecond()
+    {
+        return thrustWarmup * thrustWarmupFactor;
     }
 
     public void Initiate(float size, float quality1, float quality2)
@@ -49,7 +54,7 @@ public class Engine : MonoBehaviour
     {
         if (isOn)
         {
-            currentThrust = Mathf.Min(currentThrust + thrustWarmup * thrustWarmupFactor * Time.deltaTime,
+            currentThrust = Mathf.Min(currentThrust + GetThrustWarmupPerSecond() * Time.deltaTime,
                                       GetMaxThrust());
             Vector2 force = currentThrust * gameObject.transform.up;
 
