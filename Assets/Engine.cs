@@ -4,26 +4,29 @@ using UnityEngine;
 
 public class Engine : MonoBehaviour
 {
-    private float thrustWarmup;
+    private float thrust;
     private float maxSpeed;
-    private float currentThrust = 0f;
     private bool isOn = false;
 
     private Rigidbody2D targetRigidbody;
 
-    private const float maxThrustFactor = 1f;
-    private const float thrustWarmupFactor = 0.1f;
+    private const float thrustFactor = 1f;
     private const float maxSpeedFactor = 10f;
     private const float absoluteMaxAngularVelocity = 1080f; //degrees per second
 
-    public float GetMaxThrust()
+    public float GetThrust()
     {
-        return gameObject.transform.localScale.x * maxThrustFactor;
+        return gameObject.transform.localScale.x * thrustFactor * thrust;
     }
 
-    public float GetThrustWarmupPerSecond()
+    public Vector2 GetImpulse()
     {
-        return thrustWarmup * thrustWarmupFactor;
+        return GetThrust() * gameObject.transform.up;
+    }
+
+    public float GetMaxSpeed()
+    {
+        return maxSpeed*maxSpeedFactor;
     }
 
     public void Initiate(float size, float quality1, float quality2)
@@ -54,12 +57,10 @@ public class Engine : MonoBehaviour
     {
         if (isOn)
         {
-            currentThrust = Mathf.Min(currentThrust + GetThrustWarmupPerSecond() * Time.deltaTime,
-                                      GetMaxThrust());
-            Vector2 force = currentThrust * gameObject.transform.up;
+            Vector2 force = GetImpulse() * Time.deltaTime;
 
             if (Mathf.Abs(targetRigidbody.angularVelocity) < absoluteMaxAngularVelocity &&
-                targetRigidbody.velocity.sqrMagnitude < maxSpeed*maxSpeed*maxSpeedFactor*maxSpeedFactor)
+                targetRigidbody.velocity.sqrMagnitude < GetMaxSpeed()*GetMaxSpeed())
             {
 //                Debug.Log(currentThrust);
                 targetRigidbody.AddForceAtPosition(force, gameObject.transform.position);
@@ -71,10 +72,6 @@ public class Engine : MonoBehaviour
 //                if (!(targetRigidbody.velocity.sqrMagnitude < maxSpeed * maxSpeed * maxSpeedFactor * maxSpeedFactor))
 //                    Debug.Log("max speed exceeded");
 //            }
-        }
-        else
-        {
-            currentThrust = 0f;
         }
     }
 }

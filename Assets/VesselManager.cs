@@ -13,7 +13,7 @@ public enum VesselPartType
 {
     Bay = 1,
     Engine = 2,
-    Launcher = 3
+    Engine = 3
 }
 
 public struct VesselPart
@@ -230,20 +230,20 @@ public abstract class AttackBehavior : Behavior
     {
         Vector2 positionToAttack = ChoosePositionToAttack(actor);
 
-        List<Launcher> launchers = actor.GetLaunchers();
-        for (int i = 0; i < launchers.Count; i++)
+        List<Engine> Engines = actor.GetEngines();
+        for (int i = 0; i < Engines.Count; i++)
         {
-            Launcher launcher = launchers[i];
-            Vector2 launcherPosition = launcher.transform.position;
-            Vector2 differenceVectorToTarget = (positionToAttack - launcherPosition);
-            if (differenceVectorToTarget.magnitude > launcher.LaunchRange())
+            Engine Engine = Engines[i];
+            Vector2 EnginePosition = Engine.transform.position;
+            Vector2 differenceVectorToTarget = (positionToAttack - EnginePosition);
+            if (differenceVectorToTarget.magnitude > Engine.LaunchRange())
             {
                 continue;
             }
 
             float facingToTarget = Mathf.Acos(differenceVectorToTarget.y / differenceVectorToTarget.x) *
                                    Mathf.Rad2Deg;
-            float myFacing = launcher.transform.eulerAngles.z;
+            float myFacing = Engine.transform.eulerAngles.z;
             float offBy = Mathf.Abs(facingToTarget - myFacing);
             if (offBy < shootAccuracyTolerance)
             {
@@ -261,6 +261,36 @@ public abstract class MoveBehavior : Behavior
 {
     public override bool ChooseActionOrPass(Vessel actor)
     {
+        Vector2 targetPosition = ChoosePositionToMoveTo(actor);
+
+        float currentFacing = actor.transform.facing;
+        
+        List<Engine> engines = actor.GetEngines();
+        Dictionary<List<Engine>, Vector2> subsetToEffectivePosition = new Dictionary<List<Engine>, Vector2>();
+        Dictionary<List<Engine>, Vector2> subsetToEffectiveForce = new Dictionary<List<Engine>, Vector2>();
+        Dictionary<List<Engine>, Vector2> subsetToEffectiveMaxSpeed = new Dictionary<List<Engine>, float>();
+
+        for (int i = 0; i < Mathf.Pow(2, engines.Count); i++)
+        {
+            List<Engine> enginesSubset = new List<Engine>();
+            for (int j = 0; j < engines.Count; j++)
+            {
+                int jpower = Mathf.Pow(2, j);
+                if (Mathf.FloorToInt((float)i/(float)j) % 2 == 1)
+                {
+                    enginesSubset.Add(engines[j]);
+                }
+            }
+
+            Vector2 forceSum = Vector2.zero;
+            foreach (Engine engine in enginesSubset)
+            {
+                forceSum += engine.GetImpulse();
+            }
+        }
+
+
+
         return false;
     }
 
