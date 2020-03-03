@@ -31,7 +31,7 @@ public class Engine : MonoBehaviour
 
     public void Initiate(float size, float quality1, float quality2)
     {
-        thrustWarmup = quality1;
+        thrust = quality1;
         maxSpeed = quality2;
         targetRigidbody = gameObject.transform.parent.gameObject.GetComponent<Rigidbody2D>();
     }

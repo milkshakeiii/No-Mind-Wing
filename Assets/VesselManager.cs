@@ -272,6 +272,7 @@ public abstract class MoveBehavior : Behavior
 
         for (int i = 0; i < Mathf.Pow(2, engines.Count); i++)
         {
+            //get subset
             List<Engine> enginesSubset = new List<Engine>();
             for (int j = 0; j < engines.Count; j++)
             {
@@ -282,11 +283,24 @@ public abstract class MoveBehavior : Behavior
                 }
             }
 
+            //force
             Vector2 forceSum = Vector2.zero;
             foreach (Engine engine in enginesSubset)
             {
                 forceSum += engine.GetImpulse();
             }
+            subsetToEffectiveForce[enginesSubset] = forceSum;
+
+            //position
+            Vector2 positionSum = Vector2.zero;
+            foreach (Engine engine in enginesSubset)
+            {
+                positionSum += engine.transform.localPosition;
+            }
+            subsetToEffectivePosition[enginesSubset] = positionSum / (float)enginesSubset.Count;
+
+            //max speed
+            float effectiveMaxSpeed = 0f;
         }
 
 
