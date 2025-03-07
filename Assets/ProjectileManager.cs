@@ -44,7 +44,7 @@ public class ProjectileManager : MonoBehaviour
         projectile.SetActive(true);
         projectile.transform.localScale = Vector3.one * source.ProjectileSize();
         projectile.transform.position = source.transform.position;
-        projectile.GetComponent<Rigidbody2D>().velocity = source.transform.up * source.LaunchVelocity();
+        projectile.GetComponent<Rigidbody2D>().linearVelocity = source.transform.up * source.LaunchVelocity();
         launcherToProjectile[source] = projectile;
         StartCoroutine(ExplodeTimer(projectile, source));
 

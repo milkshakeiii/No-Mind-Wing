@@ -13,7 +13,7 @@ public enum VesselPartType
 {
     Bay = 1,
     Engine = 2,
-    Engine = 3
+    Launcher = 3
 }
 
 public struct VesselPart
@@ -107,8 +107,8 @@ public class VesselManager : MonoBehaviour
         Rigidbody2D newRigidbody = newVessel.AddComponent<UnityEngine.Rigidbody2D>();
         newRigidbody.gravityScale = 0;
         newRigidbody.useAutoMass = true;
-        newRigidbody.drag = 1f;
-        newRigidbody.angularDrag = 1f;
+        newRigidbody.linearDamping = 1f;
+        newRigidbody.angularDamping = 1f;
 
         //Collider2D newCollider = 
         newVessel.AddComponent<PolygonCollider2D>();

@@ -60,7 +60,7 @@ public class Engine : MonoBehaviour
             Vector2 force = GetImpulse() * Time.deltaTime;
 
             if (Mathf.Abs(targetRigidbody.angularVelocity) < absoluteMaxAngularVelocity &&
-                targetRigidbody.velocity.sqrMagnitude < GetMaxSpeed()*GetMaxSpeed())
+                targetRigidbody.linearVelocity.sqrMagnitude < GetMaxSpeed()*GetMaxSpeed())
             {
 //                Debug.Log(currentThrust);
                 targetRigidbody.AddForceAtPosition(force, gameObject.transform.position);

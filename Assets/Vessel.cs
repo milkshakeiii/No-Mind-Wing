@@ -49,7 +49,7 @@ public class Vessel : MonoBehaviour
     private void TakeDamage(Collider2D projectileCollider)
     {
         float damage = projectileCollider.transform.localScale.x *
-                       projectileCollider.attachedRigidbody.velocity.magnitude;
+                       projectileCollider.attachedRigidbody.linearVelocity.magnitude;
         hitpoints -= damage;
         Color color = gameObject.GetComponent<SpriteRenderer>().color;
         Color newColor = color * (hitpoints / maxHitpoints);
